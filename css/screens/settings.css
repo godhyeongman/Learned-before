@@ -1,0 +1,18 @@
+.settings__setting {
+  padding: 20px 0;
+  margin: 0 25px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* status bar 포지션이 fixed 상태라 alt screen css에 padding top값이 추가되어있음  */
+.settings__setting i {
+  margin-right: 10px;
+  opacity: 0.8;
+}
+.settings__column:last-child {
+  opacity: 0.8;
+  font-size: 15px;
+}
