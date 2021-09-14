@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>쿵쿵따</title>
+  </head>
+  <body>
+    <div><span id="userNum">1</span>번째 참가자</div>
+    <div>제시어:<span id="word"></span></div>
+    <input type="text" />
+    <button>입력</button>
+    <script>
+      const howMany = parseInt(prompt("참가자 인원수를 입력하시요."), 10);
+
+      if (howMany) {
+        alert(howMany);
+        const yesOrNo = confirm("맞습니까?");
+        const $input = document.querySelector("input");
+        const $button = document.querySelector("button");
+        const $userNum = document.querySelector("#userNum");
+        const $word = document.querySelector("#word");
+
+        let mainWord; // 제시어
+        let newWord; // 입력값
+
+        const onButton = () => {
+          if (
+            !mainWord ||
+            (newWord.length === 3 &&
+              newWord[0] === mainWord[mainWord.length - 1])
+          ) {
+            //빈칸이 비어있을경우
+            mainWord = newWord; // input값은 제시어로 변경
+            $word.textContent = mainWord; // input값은 제시어로 변경
+            const playerNum = Number($userNum.textContent);
+            if (playerNum + 1 > howMany) {
+              // 플레이어 순서 첫뻔째, 혹은 마지막 순서가 넘을시 첫번째로 회귀
+              $userNum.textContent = 1;
+            } else {
+              $userNum.textContent = playerNum + 1; //플레이어 순서를 올려주는 코드
+            }
+          } else {
+            // 아닐경우
+            alert("오답입니다.");
+          }
+          $input.value = "";
+          $input.focus();
+        };
+
+        const onInput = (event) => {
+          newWord = event.target.value;
+        };
+
+        //첫번째 참가자 input값입력시 발생 이벤트
+        $input.addEventListener("input", onInput);
+        $button.addEventListener("click", onButton);
+      }
+    </script>
+  </body>
+</html>

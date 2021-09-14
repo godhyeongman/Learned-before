@@ -10,6 +10,7 @@
     <div>제시어: <span id="word"></span></div>
     <input type="text" />
     <button>입력</button>
+
     <script>
       const number = parseInt(prompt("몇 명이 참가하나요?"), 10);
       alert(number);
@@ -24,7 +25,6 @@
 
       const onClickButton = () => {
         if (!word) {
-          // 제시어가 비어있는가? if문
           //제시어가 비어있을경우.
           word = newWord; // 입력한 단어가 제시된다.
           $word.textContent = word;
