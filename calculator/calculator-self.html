@@ -61,6 +61,7 @@
       let numOne = "";
       let operator = "";
       let numTwo = "";
+      let calculateNum = '';
       const $operator = document.querySelector("#operator");
       const $result = document.querySelector("#result");
 
@@ -75,8 +76,8 @@
         if (!numTwo) {
           $result.value = "";
         }
-        numTwo += event.target.textContent;
-        $result.value += event.target.textContent;
+          numTwo += event.target.textContent;
+        $result.value += event.target.textContent;        
       };
 
       document.querySelector("#num-0").addEventListener("click", onClickNumber);
@@ -130,6 +131,10 @@
             default:
               break;
           }
+          $operator.value = '';
+          operator= '';
+          numOne = $result.value;
+          numTwo = '';     
         } else {
           alert("숫자를 먼저 입력하세요.");
         }
