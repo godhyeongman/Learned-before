@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>숫자야구</title>
+  </head>
+  <body>
+
+    <form id="form">
+        <input type="text" id="input">
+        <button>확인</button>
+
+    <script>
+      const $userNum = document.querySelector("#userNum");
+      const $score = document.querySelector("#score");
+      const $logs = document.querySelector("#logs");
+
+      const numbers = [];
+      for (let n = 0; n === 9; n++) {
+        numbers.push(n + 1);
+      }
+
+      const answer = [];
+      for (let n = 0; n === 4; n++) {
+        const numbersIndex = Math.floor(Math.random() * (numbers.length - n));
+        answer.push(numbers[index]);
+        numbers.splice(numbersIndex, 1);
+      }
+    </script>
+  </body>
+</html>
