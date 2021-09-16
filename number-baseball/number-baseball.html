@@ -7,27 +7,89 @@
     <title>숫자야구</title>
   </head>
   <body>
-
     <form id="form">
-        <input type="text" id="input">
-        <button>확인</button>
+      <input type="text" id="input" />
+      <button>확인</button>
+    </form>
+    <div id="logs"></div>
 
     <script>
-      const $userNum = document.querySelector("#userNum");
-      const $score = document.querySelector("#score");
+      const $input = document.querySelector("#input");
       const $logs = document.querySelector("#logs");
+      const $form = document.querySelector("#form");
 
       const numbers = [];
-      for (let n = 0; n === 9; n++) {
+      for (let n = 0; n < 9; n++) {
         numbers.push(n + 1);
       }
 
       const answer = [];
-      for (let n = 0; n === 4; n++) {
+      for (let n = 0; n < 4; n++) {
         const numbersIndex = Math.floor(Math.random() * (numbers.length - n));
-        answer.push(numbers[index]);
+        answer.push(numbers[numbersIndex]);
         numbers.splice(numbersIndex, 1);
       }
+
+      console.log(answer);
+
+      const tries = []; //
+
+      function checkInput(userNum) {
+        //입력값 검사하는 함수
+        if (userNum.length !== 4) {
+          return alert("숫자를 4개 입력해주십시오");
+        }
+        if (new Set(userNum).size !== 4) {
+          return alert("중복되지 않게 입력해 주세요.");
+        }
+        if (tries.includes(userNum)) {
+          return alert("이미 시도한 값입니다.");
+        }
+        return true;
+      }
+
+      $form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const userNum = event.target[0].value;
+        $input.value = "";
+        if (!checkInput(userNum)) {
+          //입력값 에러시 식종료
+          return;
+        }
+
+        if (answer.join("") === userNum) {
+          $logs.textContent = "홈런";
+          return;
+        }
+
+        if (tries.length >= 9) {
+          const message = document.createTextNode(
+            `패배! 정답은 ${answer.join("")}`
+          ); // 역따옴표 주의
+          $logs.appendChild(message);
+          return;
+        }
+
+        let strike = 0;
+        let ball = 0;
+        // 볼 스트라이크 변수 저장
+        for (let i = 0; i < answer.length; i++) {
+          //몇볼 몇스트라이크 인지 검사 하는 반복문
+          const index = userNum.indexOf(answer[i]); //index는 userNum과 answer 배열안에서 일치하는 값이 있을경우 userNum의 배열에서 일치하는 값의 index자리값을 알려줌
+          if (index > -1) {
+            if (index === i) {
+              strike += 1;
+            } else {
+              ball += 1;
+            }
+          }
+        }
+        $logs.append(
+          `${userNum}:${strike}스트라이크, ${ball}볼`,
+          document.createElement("br")
+        );
+        tries.push(userNum);
+      });
     </script>
   </body>
 </html>
