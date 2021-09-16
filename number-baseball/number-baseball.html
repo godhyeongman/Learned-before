@@ -47,6 +47,14 @@
         }
         return true;
       }
+      let out = 0;
+
+      function defeated() {
+        const message = document.createTextNode(
+          `패배! 정답은 ${answer.join("")}`
+        ); // 역따옴표 주의
+        $logs.appendChild(message);
+      }
 
       $form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -63,31 +71,38 @@
         }
 
         if (tries.length >= 9) {
-          const message = document.createTextNode(
-            `패배! 정답은 ${answer.join("")}`
-          ); // 역따옴표 주의
-          $logs.appendChild(message);
+          defeated();
           return;
         }
-
         let strike = 0;
         let ball = 0;
+
         // 볼 스트라이크 변수 저장
         for (let i = 0; i < answer.length; i++) {
           //몇볼 몇스트라이크 인지 검사 하는 반복문
           const index = userNum.indexOf(answer[i]); //index는 userNum과 answer 배열안에서 일치하는 값이 있을경우 userNum의 배열에서 일치하는 값의 index자리값을 알려줌
+
           if (index > -1) {
             if (index === i) {
-              strike += 1;
+              strike++;
             } else {
-              ball += 1;
+              ball++;
             }
           }
         }
-        $logs.append(
-          `${userNum}:${strike}스트라이크, ${ball}볼`,
-          document.createElement("br")
-        );
+        if (strike === 0 && ball === 0) {
+          out++;
+          $logs.append(`${userNum}:${out}아웃`, document.createElement("br"));
+        } else {
+          $logs.append(
+            `${userNum}:${strike}스트라이크, ${ball}볼`,
+            document.createElement("br")
+          );
+        }
+        if (out === 3) {
+          defeated();
+          return;
+        }
         tries.push(userNum);
       });
     </script>
