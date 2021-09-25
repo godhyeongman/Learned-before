@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>가위바위보</title>
+    <style>
+      #computer {
+        width: 142px;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="computer"></div>
+    <div>
+      <button id="scissors">가위</button>
+      <button id="rock">바위</button>
+      <button id="paper">보</button>
+    </div>
+    <script>
+      const $computer = document.querySelector("#computer");
+      const $rock = document.querySelector("#rock");
+      const $scissors = document.querySelector("#scissors");
+      const $paper = document.querySelector("#paper");
+      const IMG_URL = "./rsp.png";
+      $computer.style.background = `url(${IMG_URL}) -464px 0`;
+      $computer.style.backgroundSize = "auto 200px";
+      const rspX = {
+        rock: "-220px", //가위
+        scissors: "0", //바위
+        paper: "-440px", //보
+      };
+      let computerChoice = "scissors";
+      const changeComputerHand = () => {
+        if (computerChoice === "rock") {
+          // 바위면
+          computerChoice = "scissors";
+        } else if (computerChoice === "scissors") {
+          // 가위면
+          computerChoice = "paper";
+        } else if (computerChoice === "paper") {
+          // 보면
+          computerChoice = "rock";
+        }
+        $computer.style.background = `url(${IMG_URL}) ${rspX[computerChoice]} 0`;
+        $computer.style.backgroundSize = "auto 200px";
+      };
+      setInterval(changeComputerHand, 50);
+    </script>
+  </body>
+</html>
