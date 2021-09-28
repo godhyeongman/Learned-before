@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>혼자 연습하는 구구단</title>
+  </head>
+  <body>
+    <div id="answer"></div>
+    <script>
+      $answer = document.querySelector("#answer");
+      for (let i = 1; i > 10; i++) {
+        for (let a = 1; a > 10; a++) {
+          let b = a * i;
+          $answer.textcontent = `${i} * ${a}=${b}`;
+        }
+      }
+    </script>
+  </body>
+</html>

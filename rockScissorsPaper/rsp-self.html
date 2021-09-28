@@ -88,19 +88,18 @@
           }
           $score.textContent = `${message} 총: ${rspScore}점`;
 
-          // 5판 3선승 코드 (if와 else if 는 맞았는데 else 부분에서 settimeout을 삽입하여 멈추는걸 생각하지 못하였다.)
-          if (rspScore >= 3) {
-            $score.textContent = `게임에서 승리하셨습니다.`;
+          if (rspScore === 3) {
+            $score.textContent = `승리하셨습니다.`;
             rspScore = 0;
-          } else if (rspScore <= -3) {
-            $score.textContent = `게임에서 패배하셨습니다.`;
+          } else if (rspScore === -3) {
+            $score.textContent = `패배하셨습니다.`;
             rspScore = 0;
           } else {
-            setTimeout(() => {
-              clickable = true;
-              intervalId = setInterval(changeComputerHand, 50);
-            }, 1000);
           }
+          setTimeout(() => {
+            clickable = true;
+            intervalId = setInterval(changeComputerHand, 50);
+          }, 1000);
         }
       };
 
