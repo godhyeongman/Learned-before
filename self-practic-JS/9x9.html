@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kor">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -10,8 +10,8 @@
     <div id="answer"></div>
     <script>
       $answer = document.querySelector("#answer");
-      for (let i = 1; i > 10; i++) {
-        for (let a = 1; a > 10; a++) {
+      for (let i = 1; i < 10; i++) {
+        for (let a = 1; a < 10; a++) {
           let b = a * i;
           $answer.textcontent = `${i} * ${a}=${b}`;
         }
