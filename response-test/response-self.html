@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>순발능력테스트 셀프체크</title>
+    <style>
+      #screen {
+        width: 300px;
+        height: 200px;
+        text-align: center;
+        user-select: none;
+      }
+      #screen.waiting {
+        background-color: aqua;
+      }
+      #screen.ready {
+        background-color: red;
+        color: white;
+      }
+      #screen.now {
+        background-color: greenyellow;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="screen" class="waiting">클릭해서 시작하세요</div>
+    <div id="result"></div>
+    <div id="fastest"></div>
+    <script>
+      const $screen = document.querySelector("#screen");
+      const $result = document.querySelector("#result");
+      const $fastest = document.querySelector("#fastest");
+
+      let startTime;
+      let endTime;
+      let records = [];
+      let fast = [];
+
+      const onClickEvent = (event) => {
+        if (event.target.classList.contains("waiting")) {
+          $screen.classList.replace("waiting", "ready");
+          $screen.textContent = "준비하시고 초록색 화면에 클릭하세요";
+
+          timeId = setTimeout(() => {
+            startTime = new Date();
+            $screen.classList.replace("ready", "now");
+            $screen.textContent = "지금 클릭하세요";
+          }, Math.floor(Math.random() * 1000) + 2000);
+        } else if (event.target.classList.contains("ready")) {
+          clearTimeout(timeId);
+          $screen.classList.replace("ready", "waiting");
+          $screen.textContent = "성급했습니다! 다시 시도해보세요";
+        } else if (event.target.classList.contains("now")) {
+          endTime = new Date();
+          let makeaverage = endTime - startTime;
+
+          fast.push(makeaverage);
+          records.push(makeaverage);
+          let average = records.reduce((a, c) => a + c) / records.length;
+
+          fast.sort((a, b) => a - b);
+          fast.splice(5);
+          // 제로초 정답은
+          //   topFive = fast.sort((a,b) => a - b).slice(0,5);
+          //   topFive.forEach((top,idx) => {
+          //       $result.append(
+          //           document.createElement('br'),
+          //           `${idx+1}위: ${top}ms`,
+          //       );
+          //   });
+          if (fast.length <= 5) {
+            $fastest.textContent = `최고기록:${fast} ms`;
+          }
+
+          $screen.classList.replace("now", "waiting");
+          $screen.textContent = "클릭해서 다시 측정해보세요!";
+          $result.textContent = `${endTime - startTime} ms :평균 ${average} ms`;
+        }
+      };
+
+      $screen.addEventListener("click", onClickEvent);
+    </script>
+  </body>
+</html>
