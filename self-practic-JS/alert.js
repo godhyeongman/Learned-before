@@ -1,1 +1,1 @@
-alert("hello javaScript");
+let b = alert("hello javaScript");
