@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>함수</title>
+  </head>
+  <body>
+    <script>
+      function checkAge(age) {
+        return age > 18 ? true : confirm("보호자 동의 필요");
+      }
+
+      function checkAge2(age) {
+        return age > 18 || confirm("보호자 동으 필요");
+      }
+
+      function min(a, b) {
+        if (a > b) {
+          return a;
+        } else if (b < a) {
+          return b;
+        } else {
+          return a;
+        }
+      }
+
+      function pow(x, n) {
+        let tmp = x;
+        x(tmp * n);
+      }
+    </script>
+  </body>
+</html>
