@@ -16,21 +16,34 @@ for (let i = 0; i < computerNumLenght; i++) {
   baseballNum.splice(randNum, 1);
 }
 
+function checkInput() {
+  if ($userNum.length < 4) {
+    $userNum.value = "";
+    alert("4자리수 초과 입력금지");
+    return false;
+  } else if ($userNum.length > 3) {
+    alert("4자리수 미만입력금지");
+  }
+  return false;
+}
+
 const onClickEvent = () => {
-  if (userNum.length > computerNumLenght || userNum.length < 3) {
-    $userNum.textContent = "";
-    return alert("숫자 4개를 입력해주세요");
+  if (!checkInput()) {
+    return;
   }
 
   let ballcount = 0;
   let strikecount = 0;
   let outcount = 0;
 
-  for (let j = 0; j < computerNum.length + 1; j++) {
-    if (computerNum[j] == $userNum[j]) {
-      strikecount++;
-    } else if (computerNum.includes($userNum[j])) {
-      ballcount++;
+  for (let i = 0; i < computerNum.length + 1; i++) {
+    let checkIndex = computerNum.indexOf($userNum[i]);
+    if (checkIndex > -1) {
+      if (checkIndex === i) {
+        strikecount++;
+      } else {
+        ballcount++;
+      }
     }
   }
 
@@ -38,6 +51,6 @@ const onClickEvent = () => {
     `${strikecount}: 스트라이크 ${ballcount}: 볼 ${outcount}: 아웃`,
     document.createElement("br")
   );
-  $userNum.textContent = "";
+  $userNum.value = "";
 };
 $userBtn.addEventListener("click", onClickEvent);
