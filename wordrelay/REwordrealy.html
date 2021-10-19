@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 숫자야구</title>
+  </head>
+  <body>
+    <div><span id="order">1</span>번쨰 참가자</div>
+    <div>제시어 :<span id="word"></span></div>
+    <div>
+      <input type="text" id="userWord" />
+      <button id="userBtn">입력</button>
+    </div>
+
+    <script>
+      const userNum = prompt("참가자 숫자를 입력해주세요", "");
+      // *입력값이 있고 확인시 문자열 입력값 *취소시 Null
+      alert(`${userNum}명`);
+      const yesOrNo = confirm("맞습니까?");
+      // 확인시 true 취소시 false
+
+      const $order = document.querySelector("#order");
+      const $word = document.querySelector("#word");
+      const $userWord = document.querySelector("#userWord");
+      const $userBtn = document.querySelector("#userBtn");
+      let word; //제시어
+      let newWord; //새로 입력한단어
+      onclickEvent = (event) => {
+        if (!word || word[word.length - 1] == newWord[0]) {
+          //비어있음
+          word = newWord; //입력한단어를 제시어로 변환
+          $word.textContent = word;
+          $userWord.value = "";
+
+          //차례 확인하기
+          const order = +$order.textContent; //차례 태그 변수에 정수로 저장
+
+          if (order + 1 > userNum) {
+            // 차례가 유저수 보다 많을경우
+            $order.textContent = 1;
+          } else {
+            // 차례가 유저수보다 적을 경우
+            $order.textContent = order + 1;
+          }
+        } else {
+          //비어있거나 끝말이 맞지않을경우
+          $userWord.value = "";
+          alert("틀렸습니다");
+        }
+      };
+
+      onInputEvent = (event) => {
+        newWord = event.target.value;
+      };
+      $userWord.addEventListener("input", onInputEvent);
+      $userBtn.addEventListener("click", onclickEvent);
+    </script>
+  </body>
+</html>

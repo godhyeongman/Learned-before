@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 끝말있기 셀프체크</title>
+  </head>
+  <body>
+    <div><span id="player">1</span>번째참가자</div>
+    <div>제시어: <span id="playerWord"></span></div>
+    <div><input type="text" id="playerInput" /><button id="btn"></button></div>
+
+    <script>
+      const $player = document.querySelector("#player");
+      const $playerWord = document.querySelector("#playerWord");
+      const $playerInput = document.querySelector("#playerInput");
+      const $btn = document.querySelector("#btn");
+      const playerNum = +prompt("몇명이 참가하나요", "숫자를입력해주세요");
+
+      if (typeof playerNum == "number") {
+      } else {
+        /*다음시간에 순서도 짜서 본격적으로 해볼것*/
+      }
+    </script>
+  </body>
+</html>
