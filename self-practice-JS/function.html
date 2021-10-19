@@ -9,13 +9,12 @@
   <body>
     <script>
       function checkAge(age) {
-        return age > 18 ? true : confirm("보호자 동의 필요");
+        return age > 18 ? true : confirm("보호자의 동의를 받으셨나요?");
       }
 
       function checkAge2(age) {
-        return age > 18 || confirm("보호자 동으 필요");
+        return (age = age > 18 || confirm("보호자의 동의를 받으셨나요?"));
       }
-
       function min(a, b) {
         if (a > b) {
           return a;
@@ -26,10 +25,28 @@
         }
       }
 
+      let firstNum = prompt("첫번째 값을 설정", "");
+      let secondNum = prompt("두번째 값을 설정", "");
       function pow(x, n) {
-        let tmp = x;
-        x(tmp * n);
+        if (n > 1) {
+          return alert(x ** n);
+        } else {
+          return alert("1이상의 자연수를 입력하시오.");
+        }
       }
+      pow(firstNum, secondNum);
+
+      function ask(question, yes, no) {
+        if (confirm(question)) yes();
+        else no();
+      }
+      // 위 함수를 화살표 함수로 축약하여라
+
+      ask(
+        "동의하십니까?",
+        () => alert("동의"),
+        () => alert("비동의")
+      );
     </script>
   </body>
 </html>

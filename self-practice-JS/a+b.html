@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A,B입력받아서 결과출력</title>
+  </head>
+  <body>
+    <script>
+      let A;
+      let B;
+      while (true) {
+        A = prompt("A의 값을 입력해주세요", "");
+        B = prompt("B의 값을 입력해주세요.", "");
+        if (!typeof A == "number" && !typeof B == number) continue;
+        break;
+      }
+
+      alert(+A + +B);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>쿵쿵따</title>
+  </head>
+  <body>
+    <div><span id="userNum">1</span>번째 참가자</div>
+    <div>
+      <input type="text" id="userWord" /><button id="userBtn">확인</button>
+    </div>
+
+    <script>
+      // 몇명이 참가하는지 입력을 받는다. 이떄 유저가 문자열을 입력하거나 음수 혹은 입력을 하지않을경우 다시 참가자를 입력받아야함
+      const competition = prompt("몇명이 참가합니까?", "");
+      if (competition && typeof competition == "number") {
+        const yesOrNo = confirm(`${competition}명이 맞습니까?`);
+        const $userWord = document.querySelector("#userWord");
+        const $userBtn = document.querySelector("#userBtn");
+        const userNum = document.querySelector("#userNum");
+
+        function onclickButton() {
+          if ($userWord && $userWord.length == 2) {
+          }
+        }
+
+        $userBtn.addEventListener("click", onclickButton);
+      }
+    </script>
+  </body>
+</html>
