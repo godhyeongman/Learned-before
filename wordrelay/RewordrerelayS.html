@@ -9,7 +9,9 @@
   <body>
     <div><span id="player">1</span>번째참가자</div>
     <div>제시어: <span id="playerWord"></span></div>
-    <div><input type="text" id="playerInput" /><button id="btn"></button></div>
+    <div>
+      <input type="text" id="playerInput" /><button id="btn">입력</button>
+    </div>
 
     <script>
       const $player = document.querySelector("#player");
@@ -18,10 +20,43 @@
       const $btn = document.querySelector("#btn");
       const playerNum = +prompt("몇명이 참가하나요", "숫자를입력해주세요");
 
-      if (typeof playerNum == "number") {
-      } else {
-        /*다음시간에 순서도 짜서 본격적으로 해볼것*/
+      let word;
+      let newWord;
+      let countplayer = 1;
+      onClickEvent = () => {
+        if (playerNumCheck(playerNum)) {
+          if (
+            (!word && newWord[0] == newWord[newWord.length - 1]) ||
+            (newWord[newWord.length - 1] == word[0] &&
+              newWord[0] == newWord[newWord.length - 1])
+          ) {
+            word = newWord;
+            $playerWord.textContent = word;
+            newWord = "";
+            $player.textContent = countplayer + 1;
+            countplayer = countplayer + 1;
+            $playerInput.value = "";
+          } else {
+            alert("틀렸습니다.");
+            $playerInput.value = "";
+          }
+        }
+      };
+
+      function playerNumCheck(check) {
+        if (check) {
+          if (check <= countplayer) countplayer = 0;
+          return true;
+        } else {
+          alert("참가자의 수에 문제가 있습니다 새로고침 해주세요");
+          return false;
+        }
       }
+      onInputEvent = (event) => {
+        newWord = event.target.value;
+      };
+      $btn.addEventListener("click", onClickEvent);
+      $playerInput.addEventListener("input", onInputEvent);
     </script>
   </body>
 </html>
