@@ -55,7 +55,7 @@
 
       onClickEvent = (event) => {
         event.preventDefault();
-        console.log(event);
+
         const value = event.target[0].value; //event = form, target[0] = input target[1]=button
         event.target[0] = "";
         if (!checkUserNum(value)) {

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 숫자야구 셀프체크</title>
+  </head>
+  <body>
+    <form id="form">
+      <input type="text" id="userNum" /><button id="btn">입력</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+      const $form = document.querySelector("#form");
+      const $result = document.querySelector("#result");
+
+      const numbers = Array(9)
+        .fill()
+        .map((el, idx) => {
+          return (el = idx + 1);
+        }); // 숫자야구 사용 가능 숫자 범위
+
+      const answer = []; //정답을 저장하기 위한 변수
+      for (let i = 0; i < 4; i++) {
+        let randomNum = Math.floor(Math.random() * (numbers.length - i));
+        answer.push(numbers[randomNum]);
+        numbers.splice(randomNum, 1);
+      }
+
+      let tries = []; //시도했던 결과를 저장하기위한 배열
+      function checkUserNum(check) {
+        if (check.length !== 4) {
+          alert("4자리수가 아닙니다.");
+          return;
+        }
+        if (new Set(check).size !== 4) {
+          alert("중복된 숫자가 존재합니다.");
+          return;
+        }
+
+        if (tries.includes(check)) {
+          alert("이미 입력했던 값입니다.");
+          return;
+        }
+        tries.push(check);
+        return true;
+      }
+
+      let outcount = 0; //아웃은 누적되는 값이기 때문에 함수밖에 저장해둠
+
+      onClickSubmit = (submit) => {
+        submit.preventDefault();
+        let userNum = submit.target[0].value;
+        submit.target[0].value = "";
+
+        if (!checkUserNum(userNum)) {
+          return;
+        } // 입력값에 오류나 예외상황이 있으면 식을 종류(입력검증단계)
+
+        if (tries.lenght >= 9) {
+          alert(
+            $result.append(
+              `패배! 10번틀렸습니다. 정답은 ${answer.join("")} 입니다.`,
+              document.createElement("br")
+            )
+          );
+          return;
+        } //기화가 다떨어지면 패배와 동시에 정답 공개
+
+        if (outcount === 3) {
+          $result.append(
+            `패배! 3아웃입니다. 정답은 ${answer.join("")} 입니다.`,
+            document.createElement("br")
+          );
+          return;
+        } //3아웃인 상황에는 패배와 동시에 정답을 공개함
+
+        if (userNum == answer.join("")) {
+          $result.append("홈런입니다!", document.createElement("br"));
+          return;
+        } // 입력값과 정답값이 똑같은 경우 홈런을 출력하고 함수종료
+
+        let ballcount = 0;
+        let strikecount = 0;
+
+        // 스트라이크 볼 카운팅을 위한 변수생성
+
+        for (i = 0; i < answer.length; i++) {
+          // 입력값과 정답을 비교하기위한 반복문
+          let compareNum = userNum.indexOf(answer[i]); //
+          if (compareNum > -1) {
+            // 정답과 일치하는 입력값발견 없으면 compare값이 -1 암
+            if (compareNum === i) {
+              strikecount++;
+            } else {
+              ballcount++;
+            }
+          }
+        }
+
+        if (ballcount == 0 && strikecount == 0) outcount++;
+
+        if (outcount === 3) {
+          $result.append(
+            `패배! 3아웃입니다. 정답은 ${answer.join("")} 입니다.`,
+            document.createElement("br")
+          );
+          return;
+        } //3아웃인 상황에는 패배와 동시에 정답을 공개함
+
+        $result.append(
+          `스트라이크: ${strikecount} 볼: ${ballcount} 아웃: ${outcount}`,
+          document.createElement("br")
+        );
+      };
+
+      $form.addEventListener("submit", onClickSubmit);
+    </script>
+  </body>
+</html>
