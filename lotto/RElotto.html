@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 로또 프로젝트</title>
+    <style>
+      .ball {
+        display: inline-block;
+        border: 1px solid black;
+        border-radius: 20px;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 20px;
+        text-align: center;
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="result">추첨결과:</div>
+    <div id="bonus">보너스:</div>
+
+    <script>
+      const numbers = Array(45)
+        .fill()
+        .map((el, idx) => (el = idx + 1));
+
+      const shuffle = [];
+
+      for (let i = numbers.length; i > 0; i--) {
+        randomNum = Math.floor(Math.random() * i);
+        updateShuffle = numbers.splice(randomNum, 1);
+        shuffle.push(updateShuffle[0]);
+      }
+
+      const answerNum = shuffle.slice(0, 7).sort((a, b) => a - b); // sort매서드 자세한 설명은 제로초 6-3 10분대 부터 참조
+
+      const $result = document.querySelector("#result");
+
+      const showBall = (number, $target) =>
+        setTimeout(() => {
+          const $ball = document.createElement("div"); //새로운 div생성 및 변수명으로 저장
+          $ball.className = "ball";
+          $ball.textContent = answerNum[number];
+          $target.append($ball);
+        }, 1000 * (number + 1)); // 시간차별로 결과를 공개하는 함수
+
+      for (let i = 0; i < answerNum.length - 1; i++) {
+        showBall(i, $result);
+      }
+
+      const $bonus = document.querySelector("#bonus");
+      showBall(answerNum.length - 1, $bonus);
+    </script>
+  </body>
+</html>
