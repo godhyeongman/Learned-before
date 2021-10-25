@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 가위바위보</title>
+    <style>
+      #computer {
+        width: 142px;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="computer"></div>
+
+    <div>
+      <button id="scissors" class="btn">가위</button>
+      <button id="rock" class="btn">바위</button>
+      <button id="paper" class="btn">보</button>
+    </div>
+
+    <div id="score">0</div>
+
+    <script>
+      const $computer = document.querySelector("#computer");
+      const $score = document.querySelector("#score");
+      const $rock = document.querySelector("#rock");
+      const $scissors = document.querySelector("#scissors");
+      const $paper = document.querySelector("#paper");
+
+      const IMG_URL = "./rsp.png"; // ./은 현재폴더 ../부모폴더 ../../ 부모의부모 /루트폴드(c드라이브 전체)
+      $computer.style.background = `url(${IMG_URL}) -142px 0`; // url('url경로') 0(가로위치 0(세로위치
+      $computer.style.backgroundSize = "auto 200px"; //**주의사항 백그라운드가 수정될때 백그라운드 사이즈도 동반되어야함 이유는 안하면 백그라운드 사이즈 초기화
+
+      const rspPosition = {
+        scissors: "0px",
+        rock: "-220px",
+        paper: "-440px",
+      };
+
+      const rspTable = {
+        rock: 0,
+        scissors: 1,
+        paper: -1,
+      };
+
+      let imgChange = "rock"; // 객체에 접근안함 보기쉬우라고 지정 상관없음 헷갈림요망
+
+      const changeComputerHand = () => {
+        if (imgChange == "rock") {
+          imgChange = "paper";
+        } else if (imgChange == "paper") {
+          imgChange = "scissors";
+        } else if (imgChange == "scissors") {
+          imgChange = "rock";
+        }
+        $computer.style.background = `url(${IMG_URL}) ${rspPosition[imgChange]} 0`;
+        // **주의사항 rspPosition.imgChange를 사용하지 말것 초보자 실수 많음
+        //ex) .imgChange == 'imgChange' / [imgChange] =='rock' .은 문자열처리 []할당 값처리
+        $computer.style.backgroundSize = "auto 200px";
+      };
+
+      let intervalId = setInterval(changeComputerHand, 80);
+      // 타이머마다 항상 자리가 달라지므로 벼수 저장하는것이 바람직함
+      // 다시 인터벌아이디의 값을 바꿀것이므로 const가 아닌 let 으로설정(이거때매 오류났었음)
+
+      let gettingScore = 0; //가위바위보 점수계산
+
+      const onClickButtton = (event) => {
+        clearInterval(intervalId);
+
+        setTimeout(() => {
+          clearInterval(intervalId);
+          // 코드중복이 아님 직전에 취소되지못한 인터벌을 취소해줌
+          intervalId = setInterval(changeComputerHand, 80);
+        }, 700);
+
+        const userChoice =
+          event.target.id === "rock"
+            ? "rock"
+            : event.target.id === "scissors"
+            ? "scissors"
+            : "paper";
+
+        const userScore = rspTable[userChoice];
+        const computerScore = rspTable[imgChange];
+        const battle = userScore - computerScore;
+
+        if ([2, -1].includes(battle)) {
+          // battle == '고양이' || battle == '사자' ||battel == '황소'
+          // ['고양이', '사자', '황소'].includes(battle)
+          // 위아래 둘다 같은말임 or문이 길어지면 배열로 만들어서 includes사용이 편함
+
+          $score.textContent = `승리 점수: ${++gettingScore}`;
+        } else if (battle == -2 || battle == 1) {
+          $score.textContent = `패배 점수: ${--gettingScore}`;
+        } else {
+          $score.textContent = `무승부 점수: ${gettingScore}`;
+        }
+      };
+      $rock.addEventListener("click", onClickButtton);
+      $paper.addEventListener("click", onClickButtton);
+      $scissors.addEventListener("click", onClickButtton);
+    </script>
+  </body>
+</html>
