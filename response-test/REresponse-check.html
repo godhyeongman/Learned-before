@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 반응속도 테스트</title>
+
+    <style>
+      #screen {
+        width: 300px;
+        height: 200px;
+        text-align: center;
+        user-select: none;
+      }
+      #screen.waiting {
+        background-color: aqua;
+      }
+      #screen.ready {
+        background-color: red;
+        color: white;
+      }
+      #screen.now {
+        background-color: greenyellow;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="screen" class="waiting">클릭해서 시작하세요</div>
+    <div id="result"></div>
+
+    <script>
+      const $screen = document.querySelector("#screen");
+      const $result = document.querySelector("#result");
+
+      let startTime;
+      let endTime;
+      let timeOutId;
+      const recordTime = [];
+      $screen.addEventListener("click", () => {
+        if (event.target.classList.contains("waiting")) {
+          //대기화면
+          $screen.classList.remove("waiting");
+          $screen.classList.add("ready");
+          $screen.textContent = "초록화면에 클릭하세요";
+          timeOutId = setTimeout(function () {
+            // 시간재기 시작
+            startTime = new Date();
+            $screen.classList.replace("ready", "now");
+            $screen.textContent = "지금 클릭하세요";
+          }, Math.floor(Math.random() * 1000) + 2000);
+        } else if (event.target.classList.contains("ready")) {
+          // 준비화면
+          clearTimeout(timeOutId);
+          $screen.classList.replace("ready", "waiting");
+          $screen.textContent = "성급했습니다. 다시측정하세요";
+        } else if (event.target.classList.contains("now")) {
+          // 측정화면
+          // 시간재기 끝
+          endTime = new Date();
+          const current = endTime - startTime;
+          recordTime.push(current);
+          const average =
+            recordTime.reduce((a, c) => a + c) / recordTime.length;
+          //제로초 8-4 reduce 다시한번 복습 요망
+          $result.textContent = `반응속도: ${
+            endTime - startTime
+          }ms 평균시간: ${average}ms`;
+
+          startTime = null;
+          endTime = null;
+
+          $screen.classList.remove("now");
+          $screen.classList.add("waiting");
+          $screen.textContent = "대기중 입니다.";
+        }
+      });
+    </script>
+  </body>
+</html>
