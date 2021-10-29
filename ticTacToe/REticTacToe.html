@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 틱택토</title>
+    <style>
+      table {
+        border-collapse: collaspse;
+      }
+
+      td {
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        border-radius: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const $table = document.createElement("table");
+      const $result = document.createElement("div");
+
+      const rows = [];
+
+      let turn = "O";
+      function checkTurn(event) {
+        if (event.target.textContent) {
+          // 이미 칸에 O,X가 있을경우
+          return;
+        }
+
+        event.target.textContent = turn;
+        if (turn === "O") {
+          turn = "X";
+        } else if (turn === "X") {
+          turn = "O";
+        }
+      }
+
+      function onClickEvent(clickedCell) {
+        checkTurn(clickedCell);
+      }
+
+      for (let i = 0; i < 3; i++) {
+        const $tr = document.createElement("tr");
+        const cells = [];
+        for (let j = 0; j < 3; j++) {
+          const $td = document.createElement("td");
+          cells.push($td);
+          $tr.append($td);
+        }
+        rows.push(cells);
+        $table.append($tr);
+        $table.addEventListener("click", onClickEvent);
+      }
+
+      document.body.append($table);
+      document.body.append($result);
+    </script>
+  </body>
+</html>
