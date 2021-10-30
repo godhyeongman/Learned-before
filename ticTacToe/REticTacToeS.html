@@ -6,24 +6,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>다시하는 틱택토 셀프체크</title>
     <style>
-      table {
-        border-collapse: collapse;
+      td {
+        width: 40px;
+        height: 40px;
+        border: 1px solid black;
+        border-radius: 10px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <script>
       const $table = document.createElement("table");
+      const $result = document.createElement("result");
+      let clickedTableDataHeight;
+      let clickedTableDataWidth;
+      let turn = "O";
+      const checkTurn = (event) => {
+        if (event.target.textContent) return; // 클릭한 상자에 글씨가 있을경우 이벤트 발생안함
+        event.target.textContent = turn; // 클릭한 상자의 글씨 생성
+      };
 
-      for (let i = 0; i < 3; i++) {
-        const $tr = document.createElement("tr");
-        for (let j = 0; j < 3; j++) {
-          const $td = document.createElement("td");
+      const checkClickedData = (event) => {
+        tableData.forEach((el, idx) => {
+          el.forEach((trEl, trIdx) => {
+            if (trEl === event.target) {
+              clickedTableDataWidth = trIdx;
+              clickedTableDataHeight = idx;
+            }
+          });
+        });
+      };
+
+      const checkWinner = (cHeight, cWidth) => {
+        let hasWinner = false;
+        if (
+          // 가로줄 비교
+          tableData[cHeight][0].textContent === turn &&
+          tableData[cHeight][1].textContent === turn &&
+          tableData[cHeight][2].textContent === turn
+        ) {
+          hasWinner = true;
         }
-        $tr.append($td);
+        if (
+          // 세로줄 비교
+          tableData[0][cWidth].textContent === turn &&
+          tableData[1][cWidth].textContent === turn &&
+          tableData[2][cWidth].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        if (
+          // 대각선 비교 1
+          tableData[0][0].textContent === turn &&
+          tableData[1][1].textContent === turn &&
+          tableData[2][2].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        if (
+          // 대각선 비교 2
+          tableData[0][2].textContent === turn &&
+          tableData[1][1].textContent === turn &&
+          tableData[2][0].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        return hasWinner;
+      };
+
+      const checkDraw = () => {
+        let count = tableData.length * tableData[0].length;
+        tableData.forEach((el, idx) => {
+          el.forEach((el_el, el_idx) => {
+            if (el_el.textContent) {
+              count--;
+            }
+          });
+        });
+        if (count === 0) {
+          $result.textContent = `무승부`;
+        }
+      };
+
+      const chageTurn = (event) => {
+        event.target.textContent === "O" ? (turn = "X") : (turn = "O");
+      };
+
+      const onclickEvent = (event) => {
+        checkTurn(event);
+
+        checkClickedData(event);
+
+        if (checkWinner(clickedTableDataHeight, clickedTableDataWidth)) {
+          $table.removeEventListener("click", onclickEvent);
+          $result.textContent = `${turn}님 승리`;
+        }
+        checkDraw();
+
+        chageTurn(event);
+      };
+
+      let tableData = [];
+      for (let i = 0; i < 3; i++) {
+        let $tr = document.createElement("tr");
+        let tr = [];
+        for (let j = 0; j < 3; j++) {
+          let $td = document.createElement("td");
+          $tr.append($td);
+          tr.push($td);
+        }
+        $table.append($tr);
+        tableData.push(tr);
       }
-      $table.append($tr);
+      $table.addEventListener("click", onclickEvent);
+
       document.body.append($table);
+      document.body.append($result);
     </script>
   </body>
 </html>
