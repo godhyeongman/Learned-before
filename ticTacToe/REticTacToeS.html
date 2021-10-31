@@ -21,6 +21,8 @@
       const $result = document.createElement("result");
       let clickedTableDataHeight;
       let clickedTableDataWidth;
+      let computerCheckIdx;
+      let computerCheckIdx2;
       let turn = "O";
       const checkTurn = (event) => {
         if (event.target.textContent) return; // 클릭한 상자에 글씨가 있을경우 이벤트 발생안함
@@ -33,6 +35,17 @@
             if (trEl === event.target) {
               clickedTableDataWidth = trIdx;
               clickedTableDataHeight = idx;
+            }
+          });
+        });
+      };
+
+      const checkComputerCells = () => {
+        tableData.forEach((el, idx) => {
+          el.forEach((trEl, trIdx) => {
+            if (trEl === "X") {
+              computerCheckIdx2 = trIdx;
+              computerCheckIdx = idx;
             }
           });
         });
@@ -90,20 +103,36 @@
       };
 
       const chageTurn = (event) => {
-        event.target.textContent === "O" ? (turn = "X") : (turn = "O");
+        turn = turn === "O" ? "X" : "O";
+        if (turn === "X") {
+          const emptyCells = tableData
+            .flat()
+            .filter((cell) => !cell.textContent);
+
+          const randomCell =
+            emptyCells[Math.floor(Math.random() * emptyCells.length)];
+
+          randomCell.textContent = turn;
+        }
+
+        if (checkWinner(computerCheckIdx2, computerCheckIdx)) {
+          $table.removeEventListener("click", onclickEvent);
+          $result.textContent = `${turn}님 승리`;
+        }
+        turn = turn === "X" ? "O" : "X";
       };
 
       const onclickEvent = (event) => {
         checkTurn(event);
 
         checkClickedData(event);
+        checkComputerCells();
 
         if (checkWinner(clickedTableDataHeight, clickedTableDataWidth)) {
           $table.removeEventListener("click", onclickEvent);
           $result.textContent = `${turn}님 승리`;
         }
         checkDraw();
-
         chageTurn(event);
       };
 
