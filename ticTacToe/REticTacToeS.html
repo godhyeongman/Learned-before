@@ -19,14 +19,10 @@
     <script>
       const $table = document.createElement("table");
       const $result = document.createElement("result");
-      let clickedTableDataHeight;
-      let clickedTableDataWidth;
 
-      let computerCheckIdx;
-      let computerCheckIdx2;
       let turn = "O";
       const checkTurn = (event) => {
-        if (event.target.textContent) return; // 클릭한 상자에 글씨가 있을경우 이벤트 발생안함
+        if (event.target.textContent) return true; // 클릭한 상자에 글씨가 있을경우 이벤트 발생안함
         event.target.textContent = turn; // 클릭한 상자의 글씨 생성
       };
 
@@ -39,20 +35,6 @@
             }
           });
         });
-      };
-
-      const checkComputerCells = () => {
-        deleteCompturRange.forEach((el, idx) => {
-          el.forEach((trEl, trIdx) => {
-            if (trEl.textContent) {
-              computerCheckIdx2 = trIdx;
-              computerCheckIdx = idx;
-              deleteCompturRange.splice(trIdx, 1);
-              deleteCompturRange.splice(idx, 1);
-            }
-          });
-        });
-        return deleteCompturRange;
       };
 
       const checkWinner = (cHeight, cWidth) => {
@@ -108,25 +90,56 @@
 
       const changeTurn = (event) => {
         turn = turn === "O" ? "X" : "O";
-        if (turn === "X") {
-          let computerRow = deleteCompturRange.length;
-        }
-
-        turn = turn === "X" ? "O" : "X";
       };
 
+      const makeComputerCoord = (event) => {
+        checkTurn(event);
+        let trcount = [];
+
+        tableData.forEach((el, idx) => {
+          let tdcount = [];
+          el.forEach((el_el, el_idx) => {
+            tdcount.push(el_idx);
+            if (el_el.textContent) {
+              tdcount.splice(el_idx, 1);
+            }
+          });
+          if (tdcount.length >= 0) trcount.push(tdcount);
+        });
+        console.log(trcount.length); // trcount가 안줄어들음 이걸 해결해야함
+        randomNum = Math.floor(Math.random() * trcount.length);
+        randomNum2 = Math.floor(Math.random() * trcount[randomNum].length);
+        tableData[randomNum][randomNum2].textContent = turn;
+      };
+
+      let clickedTableDataHeight;
+      let clickedTableDataWidth;
+
+      let randomNum;
+      let randomNum2;
       const onclickEvent = (event) => {
         checkTurn(event);
 
         checkClickedData(event);
-        checkComputerCells();
 
         if (checkWinner(clickedTableDataHeight, clickedTableDataWidth)) {
           $table.removeEventListener("click", onclickEvent);
           $result.textContent = `${turn}님 승리`;
+          return;
         }
+
         checkDraw();
-        changeTurn(event);
+        changeTurn();
+
+        makeComputerCoord(event);
+
+        if (checkWinner(randomNum, randomNum2)) {
+          $table.removeEventListener("click", onclickEvent);
+          $result.textContent = `${turn}님 승리`;
+          return;
+        }
+        changeTurn();
+        checkDraw();
       };
 
       let tableData = [];
