@@ -21,6 +21,7 @@
       const $result = document.createElement("result");
       let clickedTableDataHeight;
       let clickedTableDataWidth;
+
       let computerCheckIdx;
       let computerCheckIdx2;
       let turn = "O";
@@ -41,14 +42,17 @@
       };
 
       const checkComputerCells = () => {
-        tableData.forEach((el, idx) => {
+        deleteCompturRange.forEach((el, idx) => {
           el.forEach((trEl, trIdx) => {
-            if (trEl === "X") {
+            if (trEl.textContent) {
               computerCheckIdx2 = trIdx;
               computerCheckIdx = idx;
+              deleteCompturRange.splice(trIdx, 1);
+              deleteCompturRange.splice(idx, 1);
             }
           });
         });
+        return deleteCompturRange;
       };
 
       const checkWinner = (cHeight, cWidth) => {
@@ -102,23 +106,12 @@
         }
       };
 
-      const chageTurn = (event) => {
+      const changeTurn = (event) => {
         turn = turn === "O" ? "X" : "O";
         if (turn === "X") {
-          const emptyCells = tableData
-            .flat()
-            .filter((cell) => !cell.textContent);
-
-          const randomCell =
-            emptyCells[Math.floor(Math.random() * emptyCells.length)];
-
-          randomCell.textContent = turn;
+          let computerRow = deleteCompturRange.length;
         }
 
-        if (checkWinner(computerCheckIdx2, computerCheckIdx)) {
-          $table.removeEventListener("click", onclickEvent);
-          $result.textContent = `${turn}님 승리`;
-        }
         turn = turn === "X" ? "O" : "X";
       };
 
@@ -133,10 +126,13 @@
           $result.textContent = `${turn}님 승리`;
         }
         checkDraw();
-        chageTurn(event);
+        changeTurn(event);
       };
 
       let tableData = [];
+      let deleteCompturRange = tableData;
+      // 이번 아이디어는 tableData를 복사하여 만약 빈칸이라면 선택지에서 제외하고 X를 넣어줌
+      // 그후 승패판단을 새로 만들어 다시 비교하는 방향으로 가볼것임
       for (let i = 0; i < 3; i++) {
         let $tr = document.createElement("tr");
         let tr = [];
