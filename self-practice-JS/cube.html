@@ -17,8 +17,87 @@
   </head>
   <body>
     <script>
-      const data = [];
-      document.body.append(document.createElement("cube"));
+      const $cube = document.createElement("cube");
+      const $form = document.createElement("form");
+      const $input = document.createElement("input");
+      const $button = document.createElement("button");
+      $button.textContent = "입력";
+
+      const cubeData = [];
+      for (let i = 0; i < 3; i++) {
+        const $cellsRow = document.createElement("cellsRow");
+        const cubeDataRow = [];
+        for (let j = 0; j < 3; j++) {
+          const $cell = document.createElement("cell"); // 큐브셀들이 생성되지 않음
+          cubeDataRow.push($cell);
+          $cellsRow.append($cell);
+        }
+        cubeData.push(cubeDataRow);
+        $cube.append($cellsRow);
+      }
+
+      const cubeMoveCollapse =[$cube,blue,purple,green];
+      const cubeMoveRow = [$cube,red,purple,yellow];
+
+      const cubeMoveMentCheck = (event) => {
+
+        if(event.target[0].value[1] == 'U'){
+          for(let i = 0; i<cubeMoveCollapse.length; i++){
+            if(event.target[0].value[0] == 'L'){
+            for(let j = 0; j < cubeMoveCollapse[i].length; j++){
+              if([0,3,6].includes(j)){
+                cubeMoveCollapse[i].flat()[j] = cubeMoveCollapse[i-1].flat()[j]
+              }
+            }
+          }
+          else if(event.target[0].value[0] == 'C') {
+            for(let j = 0; j < cubeMoveCollapse[i].length; j++){
+              if([1,4,7].includes(j)){
+                cubeMoveCollapse[i].flat()[j] = cubeMoveCollapse[i-1].flat()[j]
+              }
+            }
+          }else if(event.target[0].value[0] == 'R'){
+            for(let j = 0; j < cubeMoveCollapse[i].length; j++){
+              if([2,5,8].includes(j)){
+                cubeMoveCollapse[i].flat()[j] = cubeMoveCollapse[i-1].flat()[j]
+              }
+            }
+           }
+        } else if(event.target[0].value[1] =='D'){ for(let i = 0; i<cubeMoveCollapse.length; i++){
+            if(event.target[0].value[0] == 'L'){
+            for(let j = 0; j < cubeMoveCollapse[i].length; j++){
+              if([0,3,6].includes(j)){
+                cubeMoveCollapse[i].flat()[j] = cubeMoveCollapse[i-1].flat()[j]
+              }
+            }
+          }
+          else if(event.target[0].value[0] == 'C') {
+            for(let j = 0; j < cubeMoveCollapse[i].length; j++){
+              if([1,4,7].includes(j)){
+                cubeMoveCollapse[i].flat()[j] = cubeMoveCollapse[i-1].flat()[j]
+              }
+            }
+          }else if(event.target[0].value[0] == 'R'){
+            for(let j = 0; j < cubeMoveCollapse[i].length; j++){
+              if([2,5,8].includes(j)){
+                cubeMoveCollapse[i].flat()[j] = cubeMoveCollapse[i-1].flat()[j]
+              }
+            }
+           }
+        }
+        }}
+
+      };
+
+      $form.addEventListener("submit", (event) => {
+        preventDefault();
+        cubeMovementUpDown(event);
+      });
+
+      document.body.append($cube);
+      document.body.append($form);
+      $form.append($input);
+      $form.append($button);
     </script>
   </body>
 </html>
