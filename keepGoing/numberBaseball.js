@@ -6,6 +6,8 @@ const $SBOzone = document.createElement("div");
 const numberScope = [];
 const numbers = [];
 const answer = [];
+const userTry = [];
+
 for (let i = 1; i < 10; i++) {
   numberScope.push(i);
   numbers.push(i);
@@ -31,36 +33,75 @@ const checkInputRule = (userInput) => {
   } // 문자가 포함 되어있는지 검사
 };
 
-const inputCompareAnswer = (userInput) => {
-  if (userInput == answer) {
-  }
-  return; // 홈런
+const checkHomerun = () => {
+  const homerunBoard = document.createElement("div");
+  homerunBoard.textContent = "홈런입니다. 승리하셨습니다.";
+  document.body.append(homerunBoard);
+  $form.removeEventListener("submit", onSubmitEvent);
+  // form태그 이벤트 삭제 (삭제후 클릭시 submit 기본동작으로 인해 페이지가 새로고침됨)
+  return true; // 홈런
+};
+
+const returnScore = (userInput) => {
   let strikeCount = 0;
   let ballCount = 0;
   let outCount = 0;
 
   for (let i = 0; i < answer.length; i++) {
-    if (answer[i] == userInput[i]) {
+    if (answer[i] == +userInput[i]) {
       strikeCount++;
-      break;
-    }
+      continue;
+    } //스트라이크 일때
 
-    if (answer.includes(userInput[i])) {
+    if (answer.includes(+userInput[i])) {
       ballCount++;
     }
   } //스트라이크 일때
 
-  // 볼일경우
-  // 아웃일경우
+  if (strikeCount == 3) {
+    checkHomerun();
+    return;
+  } // 홈런일경우 홈런 함수 실행
+
+  if (ballCount == 0 && strikeCount == 0) {
+    outCount++;
+  }
+
+  /* 비교후 결과를 화면에 송출해주는 코드*/
+  const SBOboard = document.createElement("div");
+  SBOboard.textContent = `입력값: ${userInput}/ 스트라이크: ${strikeCount}, 볼: ${ballCount}, 아웃: ${outCount} 남은 횟수: ${
+    10 - userTry.length
+  }`;
+  document.body.append(SBOboard);
 };
+
+const blockReAnswer = (userInput) => {
+  if (userTry.includes(userInput)) {
+    alert("이미 시도한 숫자입니다.");
+    return true;
+  }
+};
+
+const checkLose = () => {
+  if (userTry.length > 9) {
+    const LoserBoard = document.createElement("div");
+    LoserBoard.textContent = "시도횟수가 10번이 넘어 패배 했습니다.";
+    document.body.append(LoserBoard);
+    return true;
+  }
+};
+
+const checkSameNumber = (userInput) => {}; //!!!!!!!!!!!수정
 
 onSubmitEvent = (event) => {
   event.preventDefault(); // form 태그가 submit 되면 다시고침 되는 작동을 차단
   const userInput = event.target[0].value;
-  // 만약 문제가 있다면 form태그들이 밑에 있어서인지 체크해보자
-
-  if (checkInputRule(userInput)) return;
-  inputCompareAnswer(userInput);
+  if (blockReAnswer(userInput)) return;
+  if (checkLose()) return;
+  if (checkInputRule(userInput)) return; // 유저 인풋값이 룰에 어긋날 경우 return
+  if (checkSameNumber(userInput)) return; // 동일한 숫자막기 내일 수정!!!!!!!!!!!
+  userTry.push(userInput);
+  returnScore(userInput); // SBO을 카운트 및 화면 송출해주는 함수, 홈런일 경우 승리임을 알리고 이벤트 삭제
 };
 
 $form.addEventListener("submit", onSubmitEvent);
