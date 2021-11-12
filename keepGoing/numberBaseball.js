@@ -91,17 +91,23 @@ const checkLose = () => {
   }
 };
 
-const checkSameNumber = (userInput) => {}; //!!!!!!!!!!!수정
+const checkSameNumber = (userInput) => {
+  if (new Set(userInput).size != 3) {
+    alert("중복된 숫자를 입력하셨습니다.");
+    return true;
+  }
+}; // 중복된 숫자가 있는경우 block !! new Set() 매서드는 몰라서 정답봄... .length 가 아닌 .size를 써야함
 
 onSubmitEvent = (event) => {
   event.preventDefault(); // form 태그가 submit 되면 다시고침 되는 작동을 차단
-  const userInput = event.target[0].value;
+  const userInput = $input.value;
   if (blockReAnswer(userInput)) return;
-  if (checkLose()) return;
+  if (checkLose()) return; // 시도 횟수가 10회 이상일경우 작동안함
   if (checkInputRule(userInput)) return; // 유저 인풋값이 룰에 어긋날 경우 return
-  if (checkSameNumber(userInput)) return; // 동일한 숫자막기 내일 수정!!!!!!!!!!!
+  if (checkSameNumber(userInput)) return; // 중복된 숫자가 있을경우  return
   userTry.push(userInput);
   returnScore(userInput); // SBO을 카운트 및 화면 송출해주는 함수, 홈런일 경우 승리임을 알리고 이벤트 삭제
+  $input.value = "";
 };
 
 $form.addEventListener("submit", onSubmitEvent);
