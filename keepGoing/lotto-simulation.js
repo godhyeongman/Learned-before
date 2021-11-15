@@ -31,7 +31,7 @@ const checkuserinput = (userInput) => {
     return true; // 유저 입력값이 1부터 45 가 아니면 식 종료
   }
 
-  if (userInput <= userAnswer[userAnswer.length - 1]) {
+  if (+userInput <= +userAnswer[userAnswer.length - 1]) {
     alert("이전 입력값보다 더큰값을 입력하세요");
     return true;
   }
@@ -45,20 +45,66 @@ const makeUserBall = (userInput) => {
   const balls = document.createElement("div");
   balls.textContent = userInput;
   balls.className = "ball";
+  makeBallColor(balls, userInput);
   $answerZone.append(balls);
 };
 
-const showAnswer = () => {
-  for (let i = 0; i < answer.length; i++) {
-    setTimeout(makeAnswerBall, 1000 + 1000 * i, [i]); // 수정!!!!!!!!!!!!!!!
+const makeBallColor = (balls, userInput) => {
+  if (+userInput > 0 && 17 > +userInput) {
+    balls.style.backgroundColor = "red";
+  } else if (+userInput >= 17 && 27 > +userInput) {
+    balls.style.backgroundColor = "aqua";
+  } else if (+userInput >= 27 && 39 > +userInput) {
+    balls.style.backgroundColor = "lime";
+  } else if (+userInput >= 39) {
+    balls.style.backgroundColor = "gold";
   }
 };
 
-const makeAnswerBall = () => {
-  const AnswerBall = document.createElement("div");
-  AnswerBall.textContent = answer[i];
-  AnswerBall.className = "ball";
-  $userNum.append(AnswerBall);
+const showAnswer = () => {
+  const result = document.createElement("div");
+  result.textContent = "결과는: ";
+  $userNum.append(result);
+  for (let i = 0; i < answer.length; i++) {
+    setTimeout(
+      () => {
+        const AnswerBall = document.createElement("div");
+        AnswerBall.textContent = answer[i];
+        AnswerBall.className = "ball";
+        makeBallColor(AnswerBall, answer[i]);
+        result.append(AnswerBall);
+      },
+      1000 + 1000 * i,
+      [i]
+    );
+  }
+};
+
+compareAnswer = () => {
+  let winCount = 0;
+
+  setTimeout(() => {
+    for (let i = 0; i < answer.length; i++) {
+      if (answer[i] == +userAnswer[i]) {
+        winCount++;
+      }
+    }
+    const scoreBoard = document.createElement("div");
+    checkScore(winCount, scoreBoard);
+    document.body.append(scoreBoard);
+  }, answer.length * 1000);
+};
+
+const checkScore = (winCount, scoreBoard) => {
+  if (winCount > 4) {
+    scoreBoard.textContent = "3등입니다.";
+  } else if (winCount > 5) {
+    scoreBoard.textContent = "2등입니다.";
+  } else if (winCount == 7) {
+    scoreBoard.textContent = "축하합니다. 로또입니다.";
+  } else if (winCount < 5) {
+    scoreBoard.textContent = "당첨결과 없음!";
+  }
 };
 
 const onclickSubmit = (event) => {
@@ -68,8 +114,10 @@ const onclickSubmit = (event) => {
   if (checkuserinput(userInput)) return; // 유저 입력값이 문제가 있으면 리턴
   userAnswer.push(userInput); // 유저 입력값에 문제가 없다면 유저정답에 저장
   makeUserBall(userInput); // 문제 없는 유저 입력 값 정답에 저장
+
   if (userAnswer.length == 7) {
-    showAnswer(); // 셋타임 아웃 부분수정 필요
+    showAnswer(userInput);
+    compareAnswer();
   }
 };
 
