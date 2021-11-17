@@ -100,10 +100,11 @@
         tableData.forEach((el, idx) => {
           let tdcount = [];
           el.forEach((el_el, el_idx) => {
-            if (el_el.textContent == "") {
+
+            if (!el_el.textContent) {
               tdcount.push(el_idx);
             }
-          });
+
           if (tdcount.length > 0) trcount.push(tdcount);
         });
         console.log(trcount);
@@ -111,7 +112,7 @@
         randomNum = Math.floor(Math.random() * trcount.length);
         randomNum2 = Math.floor(Math.random() * trcount[randomNum].length);
         tableData[randomNum][randomNum2].textContent = turn;
-      };
+      });
 
       let clickedTableDataHeight;
       let clickedTableDataWidth;

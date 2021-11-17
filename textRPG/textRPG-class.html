@@ -65,10 +65,55 @@
           ];
           this.start();
         }
-        start() {
+        start(name) {
           $gameMenu.addEventListener("submit", this.onGameMenuInput);
           $battleMenu.addEventListener("submit", this.onBattleMenuInput);
           this.changeScreen("game");
+          this.hero = new Hero(this, name);
+          this.updateHeroStat();
+        }
+        onGameMenuInput = (event) => {
+          event.preventDefault();
+          const input = event.target["menu-input"].value;
+          if (input === "1") {
+            //모험
+            this.changeScreen("battle");
+            const randomIndex = Math.floor(
+              Math.random() * this.monsterList.length
+            );
+            const randomMonster = this.monsterList[randomIndex];
+            this.monster = new Monster(
+              this,
+              randomMonster.name,
+              randomMonster.hp,
+              randomMonster.att,
+              randomMonster.xp
+            );
+            this.updateMonsterStat();
+            this.showMessage(
+              `몬스터와 마주쳤다. ${this.monster.name}인 것 같다!`
+            );
+          } else if (input == "2") {
+            //휴식
+            this.hero.hp = this.hero.maxHp;
+            this.updateHeroStat();
+            this.showMessage("충분한 휴식을 취했다.");
+          } else if (input == "3") {
+            this.showMessage("");
+            this.quit();
+          }
+        };
+        showMessage(text) {
+          $message.textContent = text;
+        }
+        quit() {
+          this.hero = null;
+          this.monster = null;
+          this.updateHeroStat();
+          this.updateMonsterStat();
+          $gameMenu.removeEventListener("submit", this.onGameMenuInput);
+          $battleMenu.removeEventListener("submit", this.onBattleMenuInput);
+          this.changeScreen("start");
         }
         changeScreen(screen) {
           if (screen === "start") {
@@ -85,40 +130,35 @@
             $battleMenu.style.display = "block";
           }
         }
-      }
-
-      class Hero {
-        constructor(game, name) {
-          this.game = game;
-          this.name = name;
-          this.lev = 1;
-          this.maxHp = 100;
-          this.hp = 100;
-          this.xp = 0;
-          this.att = 10;
+        updateMonsterStat() {
+          const { hero } = this;
+          if (hero === null) {
+            $heroName.textContent = "";
+            $heroLevel.textContent = "";
+            $heroHp.textContent = "";
+            $heroXp.textContent = "";
+            $heroAtt.textContent = "";
+            return;
+          }
+          $heroName.textContent = hero.name;
+          $heroLevel.textContent = `${hero.lev}Lev`;
+          $heroHp.textContent = `HP: ${hero.hp}/${hero.maxHp}`;
+          $heroXp.textContent = `XP: ${hero.xp}/${15 * hero.lev}`;
+          $heroAtt.textContent = `ATT: ${hero.att}`;
+        }
+        updateMonsterStat() {
+          const { monster } = this;
+          if (monster === null) {
+            $monsterName.textContent = "";
+            $monsterHp.textContent = "";
+            $monsterAtt.textContent = "";
+            return;
+          }
+          $monsterName.textContent = monster.name;
+          $monsterHp.textContent = `HP: ${monster.hp}/${monster.maxHp}`;
+          $monsterAtt.textContent = `ATT: ${monster.att}`;
         }
       }
-
-      class Monster {
-        construtor(gmae, name, hp, att, xp) {
-          this.game = game;
-          this.name = name;
-          this.maxHp = hp;
-          this.hp = hp;
-          this.xp = xp;
-          this.att = att;
-        }
-        attack(target) {
-          target.hp -= this.att;
-        }
-      }
-
-      let game = null;
-      $startScreen.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const name = event.target["name-input"].value;
-        game = new Game(name);
-      });
 
       //   1.주인공 이름을 입력받아 만들기
       //   (인풋과 버튼을 이용하여 submit 이떄 preventDefault메서드 활용)
