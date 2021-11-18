@@ -17,17 +17,23 @@
   </head>
   <body>
     <script>
-      const $table = document.createElement("table");
+      const $cube = document.createElement("cube");
 
+      const cubeData = [];
       for (let i = 0; i < 3; i++) {
-        const $cr = document.createElement("cr");
+        const $cellsRow = document.createElement("cellsRow");
+        const cubeDataRow = [];
         for (let j = 0; j < 3; j++) {
-          const $cell = document.createElement("cell");
-          $cr.append($cell);
+          const $cell = document.createElement("cell"); // 큐브셀들이 생성되지 않음
+          cubeDataRow.push($cell);
+          $cellsRow.append($cell);
         }
-        $table.append($cr);
+        cubeData.push(cubeDataRow);
+        $cube.append($cellsRow);
       }
-      document.body.append($table);
+
+      document.body.append($cube);
+      document.body.append($form);
     </script>
   </body>
 </html>
