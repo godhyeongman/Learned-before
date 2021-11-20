@@ -151,15 +151,17 @@ const makeComputerCell = (evnet) => {
 
   for (let i = 0; i < 3; i++) {
     if (emptyTable[i].length == 0) {
-      forReduceHeight.splice(i, 1);
-    }
+      const forDelete = forReduceHeight.indexOf(i);
+      forReduceHeight.splice(forDelete, 1);
+    } // !!에러 수정사항 반복문이 돌며 forReduceHeight 인덱스 i를 splice하는데
+    // forReduceHeight 인덱스 1을 삭제하면 foReduceHeihgt의 인덱스 2가 1로와서 반복문의 i가 2가 될때 에러를 유발함
   }
   console.log(forReduceHeight, emptyTable);
-  // !!!거의 다끝남 랜덤한 자리 셋팅 코드만 마지막 수정하면 끝
-  // 증상은 빈칸을 골라야하는데 undefined가 뜨는현상 다시한번 생각해볼것
+
   const randHeight =
     forReduceHeight[Math.floor(Math.random() * forReduceHeight.length)];
   const randWidthLength = emptyTable[randHeight].length;
+  console.log(emptyTable[randHeight]);
   const randWidth =
     emptyTable[randHeight][Math.floor(Math.random() * randWidthLength)];
   console.log(randHeight, randWidth);

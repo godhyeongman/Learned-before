@@ -1,0 +1,26 @@
+td {
+  width: 40px;
+  height: 40px;
+  border: 1px solid black;
+  text-align: center;
+  border-radius: 10px;
+}
+
+#top {
+  display: flex;
+  justify-content: center;
+}
+#middle {
+  display: flex;
+  justify-content: center;
+}
+#bottom {
+  display: flex;
+  justify-content: center;
+}
+#back {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
