@@ -67,12 +67,53 @@ function fillColor(givenColor, turn) {
 ////////////////// 큐브 동작 함수 /////////////////////
 
 function moveTopLeftTogether() {
+  // 시계 방향으로 돌리는 부분이 에러 이부분을 고민하고 수정해야함
+}
+
+function moveTopRightTogether() {
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
-      cubeTopSide[i][j] = cubeTopSide[2 - j][i]; //메서드로 slice해서 써보자
+      cubeTopSide[i][j].style.backgroundColor =
+        cubeTopSide[j][2 - i].style.backgroundColor;
     }
   }
   console.log("top ok");
+}
+
+function moveBottomLeftTogether() {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      cubeBottomSide[i][j].style.backgroundColor =
+        cubeBottomSide[2 - j][i].style.backgroundColor;
+    }
+  }
+}
+function moveBottomRightTogether() {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      cubeBottomSide[i][j].style.backgroundColor =
+        cubeBottomSide[j][2 - i].style.backgroundColor; //!!!!! 리팩토링떄 바텀 탑에 top일경우 바텀일경우 정해서 함수 2개를 줄일수있다
+    }
+  }
+  console.log("top ok");
+}
+
+function moveLeftTopTogether() {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      cubeLeftSide[i][j].style.backgroundColor =
+        cubeLeftSide[j][2 - i].style.backgroundColor; //!!!!! 리팩토링떄 함수 2개를 줄일수있다
+    }
+  }
+}
+
+function moveRightTopTogether() {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      cubeLeftSide[i][j].style.backgroundColor =
+        cubeLeftSide[2 - j][i].style.backgroundColor; //!!!!! 리팩토링떄 함수 2개를 줄일수있다
+    }
+  }
 }
 
 function moveLeftSide(input) {
@@ -82,18 +123,45 @@ function moveLeftSide(input) {
   } else if (coord == 2) {
     moveBottomLeftTogether();
   }
-  const cubeChangeTurn = [
+  changeHorizonCube(
     cubeLeftSide,
     cubeCenterSide,
     cubeRightSide,
     cubeBackSide,
-  ];
-  for (let i = 0; i < 4; i++) {
-    let j = i + 1;
-    const fi = cubeChangeTurn[i][coord];
-    if (j == 4) j = 0;
-    cubeChangeTurn[j][coord] = fi;
-  } // !!!!!!!!!!!!!!!!!!!!! 큐브의 디스플레이는 처음부터 cubeOrder과 참조관계인데 나는 cubeData만 조작하고있었음
+    coord
+  );
+}
+
+function moveRigthSide(input) {
+  const coord = +input[2] - 1;
+  if (coord == 0) {
+    moveLeftTopTogether();
+  } else if (coord == 2) {
+    moveRightTopTogether();
+  }
+  changeHorizonCube(
+    cubeBackSide,
+    cubeRightSide,
+    cubeCenterSide,
+    cubeLeftSide,
+    coord
+  );
+}
+
+function moveTopSide(input) {
+  const coord = +input[2] - 1;
+  if (coord == 0) {
+    moveRightTopTogether();
+  } else if (coord == 2) {
+    moveLeftBottomTogether();
+  }
+  changeVerticalCube(
+    cubeTopSide,
+    cubeCenterSide,
+    cubeBottomSide,
+    cubeBackSide,
+    coord
+  );
 }
 
 function checkLOrR(input) {
@@ -132,6 +200,47 @@ function checkMovement(input) {
     checkCOrU(input);
   }
 }
+
+function changeHorizonCube(
+  chagedCube1,
+  chagedCube2,
+  chagedCube3,
+  chagedCube4,
+  coord
+) {
+  const temp = [];
+  for (let i = 0; i < cubeData[0][0].length; i++) {
+    temp.push(chagedCube1[coord][i].style.backgroundColor);
+    chagedCube1[coord][i].style.backgroundColor =
+      chagedCube2[coord][i].style.backgroundColor;
+    chagedCube2[coord][i].style.backgroundColor =
+      chagedCube3[coord][i].style.backgroundColor;
+    chagedCube3[coord][i].style.backgroundColor =
+      chagedCube4[coord][i].style.backgroundColor;
+    chagedCube4[coord][i].style.backgroundColor = temp[i];
+  }
+}
+
+function changeVerticalCube(
+  chagedCube1,
+  chagedCube2,
+  chagedCube3,
+  chagedCube4,
+  coord
+) {
+  const temp = [];
+  for (let i = 0; i < cubeData[0][0].length; i++) {
+    temp.push(chagedCube1[i][coord].style.backgroundColor);
+    chagedCube1[i][coord].style.backgroundColor =
+      chagedCube2[i][coord].style.backgroundColor;
+    chagedCube2[i][coord].style.backgroundColor =
+      chagedCube3[i][coord].style.backgroundColor;
+    chagedCube3[i][coord].style.backgroundColor =
+      chagedCube4[i][coord].style.backgroundColor;
+    chagedCube4[i][coord].style.backgroundColor = temp[i];
+  }
+}
+
 function onclickButton() {
   const input = $input.value;
   checkMovement(input);
