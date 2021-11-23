@@ -66,18 +66,30 @@ function fillColor(givenColor, turn) {
 }
 ////////////////// 큐브 동작 함수 /////////////////////
 
-function moveTopLeftTogether() {
-  // 시계 방향으로 돌리는 부분이 에러 이부분을 고민하고 수정해야함
+function moveTopLeftTogether(cube) {
+  const colorTemp = [];
+  for (let i = 0; i < 3; i++) {
+    const temp = [];
+    for (let j = 0; j < 3; j++) {
+      const newColor = cube[2 - j][i].style.backgroundColor;
+      temp.push(newColor);
+    }
+    colorTemp.push(temp);
+  }
+  changeClockwiseCube(cube, colorTemp);
 }
 
-function moveTopRightTogether() {
+function moveTopRightTogether(cube) {
+  const colorTemp = [];
   for (let i = 0; i < 3; i++) {
+    const temp = [];
     for (let j = 0; j < 3; j++) {
-      cubeTopSide[i][j].style.backgroundColor =
-        cubeTopSide[j][2 - i].style.backgroundColor;
+      const newColor = cube[j][2 - i].style.backgroundColor;
+      temp.push(newColor);
     }
+    colorTemp.push(temp);
   }
-  console.log("top ok");
+  changeClockwiseCube(cube, colorTemp);
 }
 
 function moveBottomLeftTogether() {
@@ -119,9 +131,9 @@ function moveRightTopTogether() {
 function moveLeftSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveTopLeftTogether();
+    moveTopLeftTogether(cubeTopSide);
   } else if (coord == 2) {
-    moveBottomLeftTogether();
+    moveTopLeftTogether(cubeBottomSide);
   }
   changeHorizonCube(
     cubeLeftSide,
@@ -135,9 +147,9 @@ function moveLeftSide(input) {
 function moveRigthSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveLeftTopTogether();
+    moveTopRightTogether(cubeTopSide);
   } else if (coord == 2) {
-    moveRightTopTogether();
+    moveTopRightTogether(cubeBottomSide);
   }
   changeHorizonCube(
     cubeBackSide,
@@ -151,9 +163,9 @@ function moveRigthSide(input) {
 function moveTopSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveRightTopTogether();
+    moveTopRightTogether(cubeLeftSide);
   } else if (coord == 2) {
-    moveLeftBottomTogether();
+    moveTopLeftTogether(cubeRightSide);
   }
   changeVerticalCube(
     cubeTopSide,
@@ -162,6 +174,31 @@ function moveTopSide(input) {
     cubeBackSide,
     coord
   );
+}
+
+function moveBottomSide(input) {
+  const coord = +input[2] - 1;
+  if (coord == 0) {
+    moveTopLeftTogether(cubeLeftSide);
+  } else if (coord == 2) {
+    moveTopRightTogether(cubeRightSide);
+  }
+  changeVerticalCube(
+    cubeBackSide,
+    cubeBottomSide,
+    cubeCenterSide,
+    cubeTopSide,
+    coord
+  );
+}
+
+function moveClockSide(input) {
+  const coord = +input[2] - 1;
+  if (coord == 0) {
+    moveTopLeftTogether(cubeBackSide);
+  } else if (coord == 2) {
+    moveTopRightTogether(cubeCenterSide);
+  }
 }
 
 function checkLOrR(input) {
@@ -240,7 +277,13 @@ function changeVerticalCube(
     chagedCube4[i][coord].style.backgroundColor = temp[i];
   }
 }
-
+function changeClockwiseCube(cube, colorTemp) {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      cube[i][j].style.backgroundColor = colorTemp[i][j];
+    }
+  }
+}
 function onclickButton() {
   const input = $input.value;
   checkMovement(input);
