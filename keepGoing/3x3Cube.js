@@ -27,7 +27,7 @@ const cubeOrder = [
   $orangeCube,
   $pinkCube,
 ];
-const cubeColor = ["red", "green", "blue", "purple", "orange", "pink"];
+const cubeColor = ["tomato", "turquoise", "blue", "lime", "orange", "beige"];
 const cubeData = [];
 for (let i = 0; i < cubeOrder.length; i++) {
   const cubeFilter = [];
@@ -50,10 +50,7 @@ function makeCube(cube, turn, cubeFilter) {
     for (let j = 0; j < 3; j++) {
       const $cubeCell = document.createElement("td");
       fillColor($cubeCell, turn);
-
-      $cubeCell.textContent = j;
       $cubeRow.append($cubeCell);
-
       cubeDataRow.push($cubeCell);
     }
     cube.append($cubeRow);
@@ -64,9 +61,9 @@ function makeCube(cube, turn, cubeFilter) {
 function fillColor(givenColor, turn) {
   givenColor.style.backgroundColor = cubeColor[turn];
 }
-////////////////// 큐브 동작 함수 /////////////////////
+////////////////// 큐브 배열값을 옮기는 함수 /////////////////////
 
-function moveTopLeftTogether(cube) {
+function moveRightTogether(cube) {
   const colorTemp = [];
   for (let i = 0; i < 3; i++) {
     const temp = [];
@@ -79,7 +76,7 @@ function moveTopLeftTogether(cube) {
   changeClockwiseCube(cube, colorTemp);
 }
 
-function moveTopRightTogether(cube) {
+function moveLeftTogether(cube) {
   const colorTemp = [];
   for (let i = 0; i < 3; i++) {
     const temp = [];
@@ -92,48 +89,12 @@ function moveTopRightTogether(cube) {
   changeClockwiseCube(cube, colorTemp);
 }
 
-function moveBottomLeftTogether() {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      cubeBottomSide[i][j].style.backgroundColor =
-        cubeBottomSide[2 - j][i].style.backgroundColor;
-    }
-  }
-}
-function moveBottomRightTogether() {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      cubeBottomSide[i][j].style.backgroundColor =
-        cubeBottomSide[j][2 - i].style.backgroundColor; //!!!!! 리팩토링떄 바텀 탑에 top일경우 바텀일경우 정해서 함수 2개를 줄일수있다
-    }
-  }
-  console.log("top ok");
-}
-
-function moveLeftTopTogether() {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      cubeLeftSide[i][j].style.backgroundColor =
-        cubeLeftSide[j][2 - i].style.backgroundColor; //!!!!! 리팩토링떄 함수 2개를 줄일수있다
-    }
-  }
-}
-
-function moveRightTopTogether() {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      cubeLeftSide[i][j].style.backgroundColor =
-        cubeLeftSide[2 - j][i].style.backgroundColor; //!!!!! 리팩토링떄 함수 2개를 줄일수있다
-    }
-  }
-}
-
 function moveLeftSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveTopLeftTogether(cubeTopSide);
+    moveRightTogether(cubeTopSide);
   } else if (coord == 2) {
-    moveTopLeftTogether(cubeBottomSide);
+    moveRightTogether(cubeBottomSide);
   }
   changeHorizonCube(
     cubeLeftSide,
@@ -147,9 +108,9 @@ function moveLeftSide(input) {
 function moveRigthSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveTopRightTogether(cubeTopSide);
+    moveLeftTogether(cubeTopSide);
   } else if (coord == 2) {
-    moveTopRightTogether(cubeBottomSide);
+    moveLeftTogether(cubeBottomSide);
   }
   changeHorizonCube(
     cubeBackSide,
@@ -163,9 +124,9 @@ function moveRigthSide(input) {
 function moveTopSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveTopRightTogether(cubeLeftSide);
+    moveLeftTogether(cubeLeftSide);
   } else if (coord == 2) {
-    moveTopLeftTogether(cubeRightSide);
+    moveRightTogether(cubeRightSide);
   }
   changeVerticalCube(
     cubeTopSide,
@@ -179,9 +140,9 @@ function moveTopSide(input) {
 function moveBottomSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveTopLeftTogether(cubeLeftSide);
+    moveRightTogether(cubeLeftSide);
   } else if (coord == 2) {
-    moveTopRightTogether(cubeRightSide);
+    moveLeftTogether(cubeRightSide);
   }
   changeVerticalCube(
     cubeBackSide,
@@ -195,12 +156,35 @@ function moveBottomSide(input) {
 function moveClockSide(input) {
   const coord = +input[2] - 1;
   if (coord == 0) {
-    moveTopLeftTogether(cubeBackSide);
+    moveLeftTogether(cubeBackSide);
   } else if (coord == 2) {
-    moveTopRightTogether(cubeCenterSide);
+    moveLeftTogether(cubeCenterSide);
   }
+  changeCircleCube(
+    cubeTopSide,
+    cubeRightSide,
+    cubeBottomSide,
+    cubeLeftSide,
+    coord
+  );
 }
 
+function moveUnClockSide(input) {
+  const coord = +input[2] - 1;
+  if (coord == 0) {
+    moveRightTogether(cubeBackSide);
+  } else if (coord == 2) {
+    moveRightTogether(cubeCenterSide);
+  }
+  changeUnCircleCube(
+    cubeTopSide,
+    cubeLeftSide,
+    cubeBottomSide,
+    cubeRightSide,
+    coord
+  );
+}
+//////////////오른쪽 왼쪽 확인하는 함수 //////////////////
 function checkLOrR(input) {
   if (["l", "L"].includes(input[1])) {
     moveLeftSide(input);
@@ -227,7 +211,7 @@ function checkCOrU(input) {
     moveUnClockSide(input);
   }
 }
-
+/////////////// 큐브 시계 가로 세로 방향 확인//////////
 function checkMovement(input) {
   if (["h", "H"].includes(input[0])) {
     checkLOrR(input);
@@ -235,6 +219,45 @@ function checkMovement(input) {
     checkTOrB(input);
   } else if (["c", "C"].includes(input[0])) {
     checkCOrU(input);
+  }
+}
+///////////////브라우저 큐브 색상 변환 함수 /////////////
+function changeCircleCube(
+  chagedCube1,
+  chagedCube2,
+  chagedCube3,
+  chagedCube4,
+  coord
+) {
+  const temp = [];
+  for (let i = 0; i < cubeData[0][0].length; i++) {
+    temp.push(chagedCube1[coord][i].style.backgroundColor);
+    chagedCube1[coord][i].style.backgroundColor =
+      chagedCube2[i][2 - coord].style.backgroundColor;
+    chagedCube2[i][2 - coord].style.backgroundColor =
+      chagedCube3[2 - coord][2 - i].style.backgroundColor;
+    chagedCube3[2 - coord][2 - i].style.backgroundColor =
+      chagedCube4[2 - i][coord].style.backgroundColor;
+    chagedCube4[2 - i][coord].style.backgroundColor = temp[i];
+  }
+}
+function changeUnCircleCube(
+  chagedCube1,
+  chagedCube2,
+  chagedCube3,
+  chagedCube4,
+  coord
+) {
+  const temp = [];
+  for (let i = 0; i < cubeData[0][0].length; i++) {
+    temp.push(chagedCube1[coord][i].style.backgroundColor);
+    chagedCube1[coord][i].style.backgroundColor =
+      chagedCube2[2 - i][coord].style.backgroundColor;
+    chagedCube2[2 - i][coord].style.backgroundColor =
+      chagedCube3[2 - coord][2 - i].style.backgroundColor;
+    chagedCube3[2 - coord][2 - i].style.backgroundColor =
+      chagedCube4[i][2 - coord].style.backgroundColor;
+    chagedCube4[i][2 - coord].style.backgroundColor = temp[i];
   }
 }
 
@@ -284,13 +307,15 @@ function changeClockwiseCube(cube, colorTemp) {
     }
   }
 }
+
+///////////////버튼에 이벤트 추가 및 동작 함수 ///////////////////
 function onclickButton() {
   const input = $input.value;
   checkMovement(input);
 }
 
 $button.addEventListener("click", onclickButton);
-
+////////////////////브라우저 디스플레이 함수////////////////////
 $top.append($redCube);
 $middle.append($greenCube, $blueCube, $purpleCube);
 $bottom.append($orangeCube);
