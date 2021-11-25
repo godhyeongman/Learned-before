@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>객채연습 사람만들기</title>
+  </head>
+  <body>
+    <script>
+      const $input = document.createElement("input");
+      const $button = document.createElement("button");
+      $button.textContent = "입력";
+
+      class Human {
+        constructor(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+
+        sayName() {
+          console.log(this.name);
+        }
+        sayAge() {
+          console.log(this.age);
+        }
+      }
+
+      class Programmer extends Human {
+        constructor(name, age) {
+          super(name, age);
+          this.sayAge();
+          this.sayName();
+          this.skill = ["html", "css", "js"];
+          this.saySkill();
+        }
+        saySkill() {
+          console.log(this.skill);
+        }
+      }
+
+      class Language extends Programmer {
+        constructor(name, age, Language) {
+          super(name, age);
+          this.Language = Language;
+          this.sayLanguage();
+        }
+        sayLanguage() {
+          console.log(this.Language);
+        }
+      }
+      onClickEvent = (event) => {
+        const input = $input.value;
+        if (isFinite(input)) {
+          const human = new Human("", input);
+          human.sayAge();
+        } else if (!isFinite(input)) {
+          const human = new Human(input, "");
+          human.sayName();
+        }
+      };
+
+      $button.addEventListener("click", onClickEvent);
+
+      document.body.append($input, $button);
+    </script>
+  </body>
+</html>
