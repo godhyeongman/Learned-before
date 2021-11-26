@@ -54,7 +54,10 @@
 
     <script>
       const $wrapper = document.querySelector("#wrapper");
-      const total = 20;
+      let total = +prompt(
+        "카트 숫자를 짝수로 입력해주십쇼",
+        "please input number here"
+      );
       const colors = [
         "tomato",
         "turquoise",
@@ -72,7 +75,8 @@
       let clicked = [];
       let matched = [];
       let clickable = true;
-      let colorsCopy = colors.concat(colors);
+      let colorSlice = colors.slice(0, total / 2);
+      let colorsCopy = colorSlice.concat(colorSlice);
       function shuffleColor() {
         const randomIndex = Math.floor(Math.random() * colorsCopy.length);
         const splicedColor = colorsCopy.splice(randomIndex, 1);
@@ -137,7 +141,11 @@
       function resetGame() {
         $wrapper.innerHTML = "";
         matched = [];
-        colorsCopy = colors.concat(colors);
+        total = +prompt(
+          "카트 숫자를 짝수로 입력해주십쇼",
+          "please input number here"
+        );
+        colorsCopy = colorSlice.concat(colorSlice);
         startGame();
       }
 
