@@ -31,38 +31,65 @@ function setSudokuZone() {
   }
 }
 
-function ruleFirst(filter) {
+function makeSecondZone() {
+  const topSide = [];
+  const bottomSide = [];
   for (let i = 0; i < 2; i++) {
-    for (let j = 0; j < 2; j++) {
-      if (filter.inclues(+wholeSudokuData[i][j].textContent)) {
-        filter.splice(+wholeSudokuData[i][j], 1);
-      }
-    }
+    bottomSide.push(wholeSudokuData[0].flat()[i].textContent);
+    topSide.push(wholeSudokuData[0].flat()[i + 2].textContent);
+  }
+
+  for (let j = 0; j < 2; j++) {
+    const random = Math.floor(Math.random() * wholeSudokuData[0][1].length);
+    const random2 = Math.floor(Math.random() * wholeSudokuData[0][1].length);
+    const splicedNum = topSide.splice(random, 1);
+    const splicedNum2 = bottomSide.splice(random2, 1);
+    topSide.push(splicedNum[0]);
+    bottomSide.push(splicedNum2[0]);
+  }
+
+  for (let k = 0; k < 2; k++) {
+    wholeSudokuData[1][0][k].textContent = topSide[k];
+    wholeSudokuData[1][1][k].textContent = bottomSide[k];
   }
 }
 
-function ruleSecond(filter) {
-  // 줄비교
-  //   for (let i = 0; i < 2; i++) {
-  //     for (let j = 0; j < 2; j++) {
-  //       if (filter.inclues(+wholeSudokuData[i][j].textContent)) {
-  //         filter.splice(+wholeSudokuData[i][j], 1);
-  //       }
-  //     }
-  //   }
-  // 코드가 잘못되었음
+function makeThirdZone(numScopeCopy, numScope) {
+  let leftSide = [];
+  const rightSide = [];
+  for (let i = 0; i < 2; i++) {
+    rightSide.push(wholeSudokuData[0][i][0].textContent);
+    leftSide.push(wholeSudokuData[0][i][1].textContent);
+  }
+
+  for (let j = 0; j < 2; j++) {
+    const random = Math.floor(Math.random() * wholeSudokuData[2].length);
+    const random2 = Math.floor(Math.random() * wholeSudokuData[2].length);
+    const splicedNum = leftSide.splice(random, 1);
+    const splicedNum2 = rightSide.splice(random2, 1);
+    leftSide.push(splicedNum[0]);
+    rightSide.push(splicedNum2[0]);
+  }
+
+  for (let k = 0; k < 2; k++) {
+    wholeSudokuData[2][k][0].textContent = leftSide[k];
+    wholeSudokuData[2][k][1].textContent = rightSide[k];
+  }
 }
 
-function ruleSecond() {} // 행 비교
-function ruleThird() {} // 칸 비교
 function makeNumber() {
   const numScope = [1, 2, 3, 4];
-  // 조건 3개 만들기
-  ruleFirst(numScope); // 조건 1 가로 안에서 안쓰인 숫자들 넘겨줌
-  ruleSecond(); // 조건 2 세로 안에서 안쓰인 숫자들 넘겨줌
-  ruleThird(); // 조건 3 칸안에 값들을 검사해서 없는 숫자들 리턴
+  let numScopeCopy = numScope.slice(0, numScope.length);
 
-  //걸러진 값들을 랜덤 메서드로 적용하여 삽입
+  for (let i = 0; i < 4; i++) {
+    const random = Math.floor(Math.random() * numScopeCopy.length);
+    const splicedNum = numScopeCopy.splice(random, 1);
+    wholeSudokuData[0].flat()[i].textContent = splicedNum[0];
+  }
+  numScopeCopy = numScope.slice(0, numScope.length);
+
+  makeSecondZone();
+  makeThirdZone();
 }
 
 setSudokuZone();
