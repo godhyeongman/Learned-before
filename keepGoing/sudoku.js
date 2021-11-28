@@ -77,6 +77,74 @@ function makeThirdZone(numScopeCopy, numScope) {
   }
 }
 
+function filterVertical(numScopeCopy, i) {
+  if (i % 2 == 0) {
+    const firstFilter = numScopeCopy.indexOf(
+      +wholeSudokuData[1][0][0].textContent
+    );
+    firstFilter != -1 && numScopeCopy.splice(firstFilter, 1);
+    const secondFilter = numScopeCopy.indexOf(
+      +wholeSudokuData[1][1][0].textContent
+    );
+    secondFilter != -1 && numScopeCopy.splice(secondFilter, 1);
+    return;
+  }
+  const thirdFilter = numScopeCopy.indexOf(
+    +wholeSudokuData[1][0][1].textContent
+  );
+  thirdFilter != -1 && numScopeCopy.splice(thirdFilter, 1);
+  const forthFilter = numScopeCopy.indexOf(
+    +wholeSudokuData[1][1][1].textContent
+  );
+  forthFilter != -1 && numScopeCopy.splice(forthFilter, 1);
+}
+
+function filterHorizon(numScopeCopy, i) {
+  if (i < 2) {
+    const firstFilter = numScopeCopy.indexOf(
+      +wholeSudokuData[2][0][0].textContent
+    );
+    firstFilter != -1 && numScopeCopy.splice(firstFilter, 1);
+    const secondFilter = numScopeCopy.indexOf(
+      +wholeSudokuData[2][0][1].textContent
+    );
+    secondFilter != -1 && numScopeCopy.splice(secondFilter, 1);
+    return;
+  }
+  const thirdFilter = numScopeCopy.indexOf(
+    +wholeSudokuData[2][1][0].textContent
+  );
+  thirdFilter != -1 && numScopeCopy.splice(thirdFilter, 1);
+  const forthFilter = numScopeCopy.indexOf(
+    +wholeSudokuData[2][1][1].textContent
+  );
+  forthFilter != -1 && numScopeCopy.splice(forthFilter, 1);
+}
+
+function filterZone(numScopeCopy, forthZone) {
+  forthZone.forEach((element, idx) => {
+    if (element.textContent) {
+      const check = numScopeCopy.indexOf(+element.textContent);
+      check != -1 && numScopeCopy.splice(check, 1);
+    }
+  });
+}
+
+function makeforthZone(numScopeCopy, numScope) {
+  const forthZone = wholeSudokuData[3].flat();
+  for (let i = 0; i < 4; i++) {
+    filterVertical(numScopeCopy, i);
+    filterHorizon(numScopeCopy, i);
+    filterZone(numScopeCopy, forthZone);
+    const random =
+      numScopeCopy[Math.floor(Math.random() * numScopeCopy.length)];
+    forthZone[i].textContent = random;
+    numScopeCopy = numScope.slice(0, numScope.length);
+  }
+
+  numScopeCopy;
+}
+
 function makeNumber() {
   const numScope = [1, 2, 3, 4];
   let numScopeCopy = numScope.slice(0, numScope.length);
@@ -90,6 +158,9 @@ function makeNumber() {
 
   makeSecondZone();
   makeThirdZone();
+  makeforthZone(numScopeCopy, numScope);
+  // 완성은 되었지만 마지막 칸에 빈칸이 생기는 에러가 존재함 1,2,3스도쿠 칸을
+  // 만들때 노가다 방식으로 해서 생기는 에러로 추정중
 }
 
 setSudokuZone();
