@@ -3,6 +3,8 @@ class Test {
     this.$button = document.createElement("button");
     this.$input = document.createElement("input");
     this.$screen = document.createElement("div");
+    this.clickable = true;
+    this.save = [];
     this.setGame();
   }
 
@@ -14,15 +16,14 @@ class Test {
   }
 
   onclickButton = (event) => {
-    this.save = [];
     const input = this.$input.value;
-    let clickable = true;
     input == "준비" && this.readyGame();
     input == "시작" && this.startGame();
-    this.save.push(input);
+    this.checkCorrect(input);
   };
 
   readyGame() {
+    console.log(2);
     const word = [
       "업!",
       "탕",
@@ -33,36 +34,39 @@ class Test {
       "갤럭시",
       "galaxy",
     ];
-    const randomTime = Math.floor(Math.random() * 4);
-    this.randomWord = [];
+
+    // const randomTime = Math.floor(Math.random() * 4);
     let wordCopy = word.slice(0, word.length);
-    for (let i = 0; i < wordCopy.length; i++) {
+    for (let i = 0; 0 < wordCopy.length; i++) {
       const randomIndex = Math.floor(Math.random() * wordCopy.length);
-      this.randomWord.push(wordCopy.splice(randomIndex, 1));
+      this.save.push(wordCopy.splice(randomIndex, 1)[0]);
+      console.log(this.save);
     }
   }
 
   startGame() {
     const startTime = new Date();
     const input = this.$input.value;
-    let lev = 0;
-    let i = 0;
-    const intervalID = setInterval(() => {
-      this.$screen.textContent = this.randomWord[i];
-      i++;
-      this.randomWord.length == 0 && clearInterval(intervalID);
-    }, 3500 - 1000 * lev);
+    // let lev = 0;
+    this.showWord();
   }
-  //   checkCorrect(randomWord, i) {
-  //     if (this.save === randomWord[i]) {
-  //       randomWord.splice(i, 1);
-  //       !randomWord.includes("업!") && lev++;
-  //       return;
-  //     }
-  //     if (this.save !== randomWord[i]) {
-  //       alert("잘못된 단어입력입니다.");
-  //       return;
-  //     }
-  //   }
+  checkCorrect(userInput) {
+    console.log(userInput);
+    console.log(this.save[0]);
+    if (userInput == this.save[0]) {
+      this.save.splice(0, 1);
+      this.showWord();
+    }
+  }
+  showWord() {
+    this.save.length == 0 && alert("축하합니다 모두 맞추셨습니다.");
+    setTimeout(() => {
+      this.$screen.textContent = this.save[0];
+    }, 1000 /* - 1000 * lev */);
+
+    setTimeout(() => {
+      this.$screen.textContent = "";
+    }, 2000);
+  }
 }
 new Test();
