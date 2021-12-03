@@ -7,16 +7,16 @@ const rl = readline.createInterface({
 
 class Todo {
   constructor() {
-    this.todoList = new Map();
-    this.doingList = new Map();
-    this.doneList = new Map();
-    this.timeList = new Map();
-
+    this.listStorage = {};
     this.idCount = 0; // id값을 세어줌
     this.flag = false; // false는 unblcok true는 block
     this.start();
   }
   start() {
+    this.listStorage.todoList = new Map();
+    this.listStorage.doingList = new Map();
+    this.listStorage.doneList = new Map();
+    this.listStorage.timeList = new Map();
     console.log("todo 메모장을 시작합니다. 기록을 해주세요");
     this.inputUserNum(); // 할일 입력받기
   }
@@ -51,7 +51,7 @@ class Todo {
   ///////////////입력  코드///////////////
   separateInput(input) {
     // 인풋값 쪼개서 배열에 저장 확인
-    const splitedInput = input.trim().split("$");
+    const splitedInput = input.trim().split("$"); // 만약 입력값에 띄어쓰기 있으면 해결방법 .join() 맞는가?
     //입력값에서 띄어쓰기 제거 및 $ 로 구분해서 복사
     this.returnErrorMessage(splitedInput);
     this.checkInput(splitedInput);
@@ -71,14 +71,14 @@ class Todo {
     splitedInput.splice(0, 1); //애드 확인했으니 삭제
     this.idCount++;
     console.log(`id: ${this.idCount}, ${splitedInput} 항목이 추가됬습니다.`);
-    this.todoList.set(this.idCount, splitedInput);
+    this.listStorage.todoList.set(this.idCount, splitedInput);
     this.showCurrentTask();
     this.inputUserNum();
   }
 
   showCurrentTask() {
     console.log(
-      `현재상태: todo:${this.todoList.size}개, doing:${this.doingList.size}개, done:${this.doneList.size}개`
+      `현재상태: todo:${this.listStorage.todoList.size}개, doing:${this.listStorage.doingList.size}개, done:${this.listStorage.doneList.size}개`
     );
   }
 
@@ -92,12 +92,12 @@ class Todo {
 
   showTodoList() {
     const showTodo = [];
-    if (this.todoList.size == 0) {
+    if (this.listStorage.todoList.size == 0) {
       console.log("헤야 할일이 없습니다.");
       this.inputUserNum();
       return;
     }
-    for (let i of this.todoList) {
+    for (let i of this.listStorage.todoList) {
       showTodo.push(i);
     }
     console.log(showTodo.join());
@@ -106,12 +106,12 @@ class Todo {
 
   showDoingList() {
     const showTodo = [];
-    if (this.doingList.size == 0) {
+    if (this.listStorage.doingList.size == 0) {
       console.log("하는중인 일이 없습니다.");
       this.inputUserNum();
       return;
     }
-    for (let i of this.doingList) {
+    for (let i of this.listStorage.doingList) {
       showTodo.push(i);
     }
     console.log(showTodo.join());
@@ -120,14 +120,14 @@ class Todo {
 
   showDoneList() {
     const showTodo = [];
-    if (this.doneList.size == 0) {
+    if (this.listStorage.doneList.size == 0) {
       console.log("끝내야 할일이 없습니다.");
       this.inputUserNum();
       return;
     }
-    for (let i of this.doneList) {
+    for (let i of this.listStorage.doneList) {
       const id = i[0];
-      showTodo.push(i[1], this.timeList.get(id)); //donelist의 value와 timelist의 value만을 가져옴
+      showTodo.push(i[1], this.listStorage.timeList.get(id)); //donelist의 value와 timelist의 value만을 가져옴
     }
     console.log(showTodo.join());
     this.inputUserNum();
@@ -139,45 +139,36 @@ class Todo {
     splitedInput.splice(0, 1); //업데이트 확인했으니 삭제
     const id = +splitedInput[0]; //바꿔줄 id값(숫자형으로 형변환)
     const task = splitedInput[1]; //바꾸고싶은 상태
+
     setTimeout(() => {
       // 3초 딜레이
-      if (this.todoList.has(id)) {
-        //투두리스트에 원하는 id가 있으면 상태변환
-        this.changeTask(id, task);
-        return;
-      }
-      if (this.doingList.has(id)) {
-        //두잉리스트에 원하는 id가 있으면 상태변환
-        this.changeTask(id, task);
-        return;
-      }
-      if (this.doneList.has(id)) {
-        //던리스트에 원하는 id가 있으면 상태변환
-        this.changeTask(id, task);
-        return;
-      }
+      const everyList = [
+        this.listStorage.todoList,
+        this.listStorage.doingList,
+        this.listStorage.doneList,
+      ];
+      everyList.forEach((list) => {
+        if (list.has(id)) {
+          this.changeTask(id, task, list);
+          // 이부분이 현재 상태를 2번 반복시킴 return이 안먹음 forEach문이라
+        }
+      });
     }, 3000);
   }
 
-  changeTask(id, task) {
-    // 입력값을 확인후 Map값으로 전환
-    const everyList = [this.todoList, this.doingList, this.doneList];
-    //listKey
-    everyList.forEach((list) => {
-      if (list.has(id)) {
-        const keyValue = list.get(id); // 해당 Map key 저장
-        list.delete(id); //해당 Map에서 key 데이타 삭제
-        if (task == "doing") {
-          this.doingList.set(id, keyValue);
-          this.recordTime(id);
-        } else if (task == "done") {
-          this.doneList.set(id, keyValue);
-          this.checkTime(id);
-        }
-      }
-    });
+  changeTask(id, task, list) {
+    const keyValue = list.get(id); // 해당 Map value 저장
+    list.delete(id); //해당 Map에서 key 데이타 삭제
+    if (task == "doing") {
+      this.listStorage.doingList.set(id, keyValue);
+      this.recordTime(id);
+    } else if (task == "done") {
+      this.listStorage.doneList.set(id, keyValue);
+      this.checkTime(id, keyValue);
+    }
+
     console.log(
-      `현재상태: todo:${this.todoList.size}개, doing:${this.doingList.size}개, done:${this.doneList.size}개`
+      `현재상태: todo:${this.listStorage.todoList.size}개, doing:${this.listStorage.doingList.size}개, done:${this.listStorage.doneList.size}개`
     );
     this.inputUserNum();
   }
@@ -185,13 +176,13 @@ class Todo {
   ////////////////////시간 측정 코드///////////////////////
   recordTime(id) {
     // todo 에서 doing으로 변환시 시간 기록
-    this.timeList.set(id, new Date());
+    this.listStorage.timeList.set(id, new Date());
   }
   checkTime(id) {
     const endTime = new Date();
-    const startTime = this.timeList.get(id);
+    const startTime = this.listStorage.timeList.get(id);
     const takedTime = Math.floor((endTime - startTime) / 1000); // 끝시간에서 시작시간을 빼서 표기해줌
-    this.timeList.set(id, takedTime + "초");
+    this.listStorage.timeList.set(id, takedTime + "초"); //!!!!!!! 시간초 정리해야함
   }
 }
 
