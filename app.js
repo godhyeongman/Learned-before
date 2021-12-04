@@ -147,12 +147,16 @@ class Todo {
         this.listStorage.doingList,
         this.listStorage.doneList,
       ];
-      everyList.forEach((list) => {
+      console.log("everylist", everyList);
+      const foundedMap = everyList.find((list) => {
         if (list.has(id)) {
-          this.changeTask(id, task, list);
-          // 이부분이 현재 상태를 2번 반복시킴 return이 안먹음 forEach문이라
+          return true;
         }
       });
+      if (foundedMap) {
+        console.log(foundedMap);
+        this.changeTask(id, task, foundedMap);
+      }
     }, 3000);
   }
 
@@ -181,6 +185,9 @@ class Todo {
   checkTime(id) {
     const endTime = new Date();
     const startTime = this.listStorage.timeList.get(id);
+    console.log(endTime, startTime, typeof endTime, typeof startTime);
+    console.log(startTime.toString());
+    console.log(endTime - startTime);
     const takedTime = Math.floor((endTime - startTime) / 1000); // 끝시간에서 시작시간을 빼서 표기해줌
     this.listStorage.timeList.set(id, takedTime + "초"); //!!!!!!! 시간초 정리해야함
   }
