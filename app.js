@@ -18,10 +18,10 @@ class Todo {
     this.listStorage.doneList = new Map();
     this.listStorage.timeList = new Map();
     console.log("todo 메모장을 시작합니다. 기록을 해주세요");
-    this.inputUserNum(); // 할일 입력받기
+    this.getUserInput(); // 할일 입력받기
   }
 
-  inputUserNum() {
+  getUserInput() {
     // 인풋 값 입력받기
     let userInput;
     rl.question("", (answer) => {
@@ -34,17 +34,17 @@ class Todo {
   returnErrorMessage(input) {
     if (input.length > 3) {
       console.log("규정에 어긋난 입력입니다.");
-      this.inputUserNum();
+      this.getUserInput();
       return;
     }
     if (input.length == 3 && !["doing", "done"].includes(input[2])) {
       console.log("오직 doing,done 상태로만 변경가능합니다.");
-      this.inputUserNum();
+      this.getUserInput();
       return;
     }
     if (!["show", "add", "update"].includes(input[0])) {
       console.log("명령 가능 단어는 /'show','add','update'/ 입니다.");
-      this.inputUserNum();
+      this.getUserInput();
     }
   }
 
@@ -73,7 +73,7 @@ class Todo {
     console.log(`id: ${this.idCount}, ${splitedInput} 항목이 추가됬습니다.`);
     this.listStorage.todoList.set(this.idCount, splitedInput);
     this.showCurrentTask();
-    this.inputUserNum();
+    this.getUserInput();
   }
 
   showCurrentTask() {
@@ -94,35 +94,35 @@ class Todo {
     const showTodo = [];
     if (this.listStorage.todoList.size == 0) {
       console.log("헤야 할일이 없습니다.");
-      this.inputUserNum();
+      this.getUserInput();
       return;
     }
     for (let i of this.listStorage.todoList) {
       showTodo.push(i);
     }
     console.log(showTodo.join());
-    this.inputUserNum();
+    this.getUserInput();
   }
 
   showDoingList() {
     const showTodo = [];
     if (this.listStorage.doingList.size == 0) {
       console.log("하는중인 일이 없습니다.");
-      this.inputUserNum();
+      this.getUserInput();
       return;
     }
     for (let i of this.listStorage.doingList) {
       showTodo.push(i);
     }
     console.log(showTodo.join());
-    this.inputUserNum();
+    this.getUserInput();
   }
 
   showDoneList() {
     const showTodo = [];
     if (this.listStorage.doneList.size == 0) {
       console.log("끝내야 할일이 없습니다.");
-      this.inputUserNum();
+      this.getUserInput();
       return;
     }
     for (let i of this.listStorage.doneList) {
@@ -130,7 +130,7 @@ class Todo {
       showTodo.push(i[1], this.listStorage.timeList.get(id)); //donelist의 value와 timelist의 value만을 가져옴
     }
     console.log(showTodo.join());
-    this.inputUserNum();
+    this.getUserInput();
   }
 
   ////////////////////상태 변환 코드///////////////////////
@@ -174,7 +174,7 @@ class Todo {
     console.log(
       `현재상태: todo:${this.listStorage.todoList.size}개, doing:${this.listStorage.doingList.size}개, done:${this.listStorage.doneList.size}개`
     );
-    this.inputUserNum();
+    this.getUserInput();
   }
 
   ////////////////////시간 측정 코드///////////////////////
