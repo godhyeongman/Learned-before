@@ -39,3 +39,4 @@ function checkParameter() {
 // console.log(cylinder(1, 3));
 
 // 테스트 결과 오류 검증 O, 계산 결과 출력 O
+// !!! 화살표함수 사용시 오류 검색도중 발견 !!! 화살표 함수는 arguments 객체를 통해 가변인자 사용 불가능
