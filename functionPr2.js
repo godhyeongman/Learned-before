@@ -8,25 +8,26 @@ function fibo(a, b) {
 }
 
 // 넓이 구하기
+const runStorage = [];
 
 function circle(half) {
   const goal = arguments[1];
-  checkParameter(half, goal);
+  if (checkParameter(half, goal)) return;
   console.log(half * half * Math.PI);
   if (half >= goal) return;
   half++;
-  circle(half, goal);
+  if (arguments[1]) circle(half, goal);
 }
 
 const rectangle = (width, height) => {
   if (checkParameter(width, height)) return;
 
-  return width * height;
+  return console.log(width * height);
 };
 
 const trapezoid = (topLength, bottomLength, height) => {
   if (checkParameter(topLength, bottomLength, height)) return;
-  return ((topLength + bottomLength) * height) / 2;
+  return console.log(((topLength + bottomLength) * height) / 2);
 };
 
 function checkParameter() {
@@ -51,6 +52,15 @@ function getArea(figure) {
         arguments[argumentsCount + 2]
       )
     : console.log("error");
+  runStorage.push(figure);
+}
+
+function printExecutionSequence() {
+  console.log(`실행순서: ${runStorage.join(", ")}`);
 }
 getArea("circle", 7, 10);
+getArea("circle");
+getArea("rect", 2, 3);
+getArea("trapezoid");
+printExecutionSequence();
 // >  원의 넓이 값출력
