@@ -9,15 +9,14 @@ function fibo(a, b) {
 
 // 넓이 구하기
 
-const circle = (half, argumentsCount) => {
-  if (isNaN(half)) {
-    return console.log("error");
-  }
-
+function circle(half) {
+  const goal = arguments[1];
+  checkParameter(half, goal);
   console.log(half * half * Math.PI);
-  // 재귀넣어서 미션 요건 충족시키자
-  argumentsCount++;
-};
+  if (half >= goal) return;
+  half++;
+  circle(half, goal);
+}
 
 const rectangle = (width, height) => {
   if (checkParameter(width, height)) return;
@@ -42,7 +41,7 @@ function checkParameter() {
 function getArea(figure) {
   let argumentsCount = 1;
   figure == "circle"
-    ? circle(arguments[argumentsCount], argumentsCount)
+    ? circle(arguments[argumentsCount], arguments[argumentsCount + 1])
     : figure == "rect"
     ? rectangle(arguments[argumentsCount], arguments[argumentsCount + 1])
     : figure == "trapezoid"
@@ -53,5 +52,5 @@ function getArea(figure) {
       )
     : console.log("error");
 }
-getArea("circle", 10);
+getArea("circle", 7, 10);
 // >  원의 넓이 값출력
