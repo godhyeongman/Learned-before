@@ -155,11 +155,14 @@ const myReduce = (arr, callback, initialValue) => {
   if (!initialValue) {
     for (let i = 0; i < arr.length; i++) {
       if (arr.length === i + 1) break;
-      answer = callback(arr[i + 1], arr[i]);
+      answer = callback(arr[i], arr[i + 1]);
+      arr[i + 1] = answer;
     }
   } else {
     for (let i = 0; i < arr.length; i++) {
-      answer += callback(initialValue, arr[i]);
+      if (arr.length === i) break;
+      answer = callback(initialValue, arr[i]);
+      initialValue = answer;
     }
   }
 
@@ -167,4 +170,4 @@ const myReduce = (arr, callback, initialValue) => {
 
   //여기에 구현
 };
-myReduce(test, (a, b) => a * b);
+myReduce(test, (a, b) => a - b, 1);
