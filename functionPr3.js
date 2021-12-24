@@ -146,5 +146,25 @@ function checkChildNode(obj) {
     obj.childnode.forEach((item) => checkChildNode(item));
   }
 }
-checkChildNode(check[0]);
-console.log(answer);
+// checkChildNode(check[0]);
+// console.log(answer);
+
+const test = [1, 2, 3, 4];
+const myReduce = (arr, callback, initialValue) => {
+  let answer = 0;
+  if (!initialValue) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr.length === i + 1) break;
+      answer = callback(arr[i + 1], arr[i]);
+    }
+  } else {
+    for (let i = 0; i < arr.length; i++) {
+      answer += callback(initialValue, arr[i]);
+    }
+  }
+
+  return console.log(answer);
+
+  //여기에 구현
+};
+myReduce(test, (a, b) => a * b);
