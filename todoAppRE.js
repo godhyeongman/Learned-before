@@ -1,3 +1,4 @@
+const { get } = require("http");
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
@@ -32,13 +33,16 @@ appFunc.checkInput = function (input) {
   if (!this.showErr(copiedInput)) this.getUserInput();
   copiedInput[0] === "add" && this.addTodo(copiedInput[1]);
   copiedInput[0] === "show" && this.showTask(copiedInput[1]);
+  copiedInput[0] === "change" && this.changeTask();
 };
 
 appFunc.showErr = function (error) {
   if (!["add", "show", "done"].includes(error[0])) {
     console.log(`${error[0]}는 제공하고 있는 기능이 이닙니다.`);
+    return true;
   } else if (error.length > 2) {
     console.log("입력양식에 문제가 있습니다.");
+    return true;
   }
 };
 
@@ -57,11 +61,43 @@ appFunc.showTask = function (listOrAll) {
       }
     });
     console.log(`현재상태: todo:${todo}개, doing: ${doing}개, done: ${done}개`);
-  } else if (listOrAll === "todo") {
-    const todoArr = todoStorage.dataArr.map((data) => data.name);
-    console.log(todoArr);
+  } else if (["todo", "doing", "done"].includes(listOrAll)) {
+    const status = listOrAll;
+    const taskArr = todoStorage.dataArr.map((data) => {
+      if (data.status === status) return data.name;
+    });
+    console.log(
+      `${status}리스트: 총개수:${taskArr.length}개 / ${taskArr.join(", ")}`
+    );
   }
   this.getUserInput();
+};
+
+appFunc.changeTask = function () {
+  const chageDataArr = this.getChangeTask();
+  const chagedId = +chageDataArr[0];
+  const chagedStatus = chageDataArr[1];
+  if (this.checkChageData(chagedId, chagedStatus)) return this.changeTask();
+  const onChagedObj = todoStorage.dataArr.find((item) => {
+    if (item.id === chagedId) return item;
+  });
+  onChagedObj.status = chagedStatus;
+};
+
+appFunc.getChangeTask = function () {
+  rl.question("어떤일을 바꿀까요?", (input) => {
+    return Array.from(input.split("$"));
+  });
+};
+
+appFunc.checkChageData = function (id, task) {
+  if (todoStorage.idCount < id) {
+    console.log("id 입력값에 문제가 있습니다.");
+    return true;
+  } else if (!["todo", "doing", "done"].includes(task)) {
+    console.log("바꾸고 싶은 상태값에 문제가 있습니다.");
+    return true;
+  }
 };
 
 appFunc.getUserInput();
