@@ -5,7 +5,7 @@ class Duck {
 }
 
 class Person {
-  quack() {
+  speak() {
     console.log("꽤애액");
   }
 }
