@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-module.exports = (env) => {
+module.exports = (env, options) => {
   const { NODE_ENV } = env;
   console.log(`[NODE_ENV] >>> ${NODE_ENV}`);
   dotenv.config();
