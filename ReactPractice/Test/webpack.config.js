@@ -4,11 +4,11 @@ const path = require("path");
 const RefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
-  name: "wordrelay-setting",
+  name: "boiler-plate",
 
   mode: "development",
 
-  devtool: "eval-source-map",
+  devtool: "eval",
 
   resolve: {
     extensions: [".js", ".jsx"],

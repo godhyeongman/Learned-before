@@ -1,7 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 
-export class Try extends Component {
-  render() {
-    return <li key={this.props.triedData}>{this.props.triedData}</li>;
-  }
-}
+const Try = ({ triedData }) => {
+  return (
+    <li>
+      <div>{triedData.try}</div>
+      <div>{triedData.result}</div>
+    </li>
+  );
+};
+
+export default Try;
