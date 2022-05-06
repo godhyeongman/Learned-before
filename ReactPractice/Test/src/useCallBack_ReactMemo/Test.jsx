@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 
 const CounterButton = React.memo(function ({ onClicks, count }) {
-  console.log("카운터 버튼 렌더링");
+  console.log(`카운터 버튼 렌더링 ${count}`);
   return <button onClick={onClicks}>{count.num}</button>;
 });
 
@@ -18,11 +18,11 @@ export default function Counter() {
   }, [count2]);
 
   return (
-    <>
+    <div>
       <div>{count1.num}</div>
       <div>{count2.num}</div>
       <CounterButton onClicks={increament1} count={count1} />
       <CounterButton onClicks={increament2} count={count2} />
-    </>
+    </div>
   );
 }

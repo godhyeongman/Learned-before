@@ -15,7 +15,7 @@ module.exports = {
   },
 
   entry: {
-    app: ["./src/client"],
+    app: ["./src/PropsRenderTest/client"],
   },
 
   module: {
