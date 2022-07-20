@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chats screen Kokoa-talk</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="status-bar">
+      <div class="status-bar__column">
+        <span>No Service</span>
+        <i class="fas fa-wifi"></i>
+      </div>
+      <div class="status-bar__column">
+        <span>18:30</span>
+      </div>
+      <div class="status-bar__column">
+        <span>110%</span>
+        <i class="fas fa-battery-full fa-lg"></i>
+        <i class="fas fa-bolt"></i>
+      </div>
+    </div>
+    <header class="screen-header">
+      <h1 class="screen-header__title">채팅</h1>
+      <div class="screen-header__icons">
+        <span><i class="fas fa-search"></i></span>
+        <span><i class="far fa-comment-dots"></i></span>
+        <span><i class="fas fa-music"></i></span>
+        <span><i class="fas fa-cog"></i></a></span>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <ul class="nav__list">
+        <li class="nav__btn">
+          <a class="nav__link" href="friends.html"> <i class="far fa-user fa-2x"></i></a>
+        </li>
+        <li class="nav__btn">
+          <a class="nav__link" href="chats.html"
+            ><span class="nav__notification">1</span
+            ><i class="fas fa-comments fa-2x"></i>
+          </a>
+        </li>
+        <li class="nav__btn">
+          <a class="nav__link" href="find.html"><i class="fas fa-search fa-2x"></i></a>
+        </li>
+        <li class="nav__btn">
+          <a class="nav__link" href="more.html"
+            ><i class="fas fa-ellipsis-h fa-2x"></i
+          ></a>
+        </li>
+      </ul>
+    </nav>
+
+
+
+    <main class="main-screen">
+      <a href="chat.html">
+      <div class="user-component">
+        <div class="user-component__column">
+          <img src="css/images/profile.jpg" class="user-component__avatar"/>
+          <div class="user-component__text">
+            <h4 class="user-component__title">김형만</h4>
+            <h6 class="user-component__subTitle">코코아톡 계정정보를 확인해주세요.</h6>
+          </div>
+        </div>
+        <div class="user-component__column">
+          <span class="user-component__time">21:00</span>
+          <div class="badge">1</div>
+        </div>
+      </div>
+    </a>
+    </main>
+
+    <div id="no-mobile">
+      <span>화면이 너무 큽니다. 사이즈를 줄여주세요!</span>
+    </div>
+    
+    <script
+      src="https://kit.fontawesome.com/30f9143120.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

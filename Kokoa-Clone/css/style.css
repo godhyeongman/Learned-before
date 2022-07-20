@@ -1,0 +1,28 @@
+@import "reset.css";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap");
+@import "variable.css";
+/* components */
+@import "components/status-bar.css";
+@import "components/nav-bar.css";
+@import "components/screen-header.css";
+@import "components/user-components.css";
+@import "components/badge.css";
+@import "components/icons-row.css";
+@import "components/alt-screen-header.css";
+/* screens */
+@import "screens/login.css";
+@import "screens/friends.css";
+@import "screens/find.css";
+@import "screens/more.css";
+@import "screens/settings.css";
+@import "screens/chat.css";
+@import "screens/no-mobile.css";
+
+body {
+  color: #2e363e;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.main-screen {
+  padding: 0px var(--horizontal-space);
+}
