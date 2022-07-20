@@ -1,0 +1,22 @@
+{
+  "name": "practice_webpack",
+  "version": "1.0.0",
+  "description": "practice webpack",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "test",
+    "build": "webpack serve --progress --env NODE_ENV=development",
+    "start": "webpack-dev-server --open --progress --env NODE_ENV=development"
+  },
+  "author": "dott",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  }
+}

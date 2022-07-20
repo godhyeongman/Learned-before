@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const GuguDan = () => {
+        const [firstNum, setFirst] = React.useState(
+          Math.ceil(Math.random() * 9)
+        );
+        const [secondNum, setSecond] = React.useState(
+          Math.ceil(Math.random() * 9)
+        );
+        const [value, setValue] = React.useState("");
+        const [result, setResult] = React.useState("");
+        const inputRef = React.useRef();
+        return (
+          <React.Fragment>
+            <div>
+              {firstNum} 곱하기 {secondNum}는?
+            </div>
+            <form onSubmit={onSubmit}>
+              <input
+                ref={inputRef}
+                type="number"
+                value={value}
+                onChange={onChange}
+              />
+              <button>입력!</button>
+            </form>
+            <div>{result}</div>
+          </React.Fragment>
+        );
+      };
+
+      const onChange = (e) => {
+        setValue(e.target.value);
+      };
+
+      const onSubmit = (e) => {
+        e.preventDefault();
+
+        if (+this.state.value === this.state.firstNum * this.state.secondNum) {
+          setResult("정답" + value);
+          setFirst(Math.random() * 9);
+          setSecond(Math.random() * 9);
+          setValue("");
+
+          inputRef.current.focus();
+        } else {
+          setResult("땡");
+          inputRef.current.focus();
+        }
+      };
+    </script>
+    <script type="text/babel">
+      ReactDOM.render(<GuguDan />, document.querySelector("#root"));
+    </script>
+  </body>
+</html>

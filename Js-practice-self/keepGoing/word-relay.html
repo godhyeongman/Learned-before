@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>끝말잍기</title>
+  </head>
+  <body>
+    <script>
+      const $word = document.createElement("div");
+      const $input = document.createElement("input");
+      const $btn = document.createElement("button");
+      const $form = document.createElement("form");
+      const $userNum = document.createElement("div");
+      $form.append($input);
+      $form.append($btn);
+      $btn.style.marginLeft = "20px";
+      $btn.textContent = "입력";
+      $word.textContent = "제시어가 표시됩니다.";
+
+      alert("input창에 참가인원을 입력하세요");
+
+      let saveUserNum = 0;
+      const checkUserNum = (userInput) => {
+        const numbers = []; // 문자인지 숫자인지 참가자 입력확인을 위해
+        for (let i = 0; i < 10; i++) {
+          numbers.push(i);
+        }
+
+        if ($userNum.textContent) return false;
+
+        for (let i = 0; i < userInput.length; i++) {
+          if (!numbers.includes(+userInput[i]) || +userInput <= 0) {
+            alert("잘못입력하셨습니다.");
+            return true;
+          }
+        }
+
+        if (+userInput > 0 && typeof +userInput == "number") {
+          saveUserNum = +userInput;
+          document.body.append($userNum);
+          alert(`${+userInput}명이 참가합니다.`);
+        }
+      };
+
+      let userTurnCount = 0;
+      const checkUserturn = (saveUserNum) => {
+        userTurnCount++;
+        console.log(userTurnCount);
+        $userNum.textContent = `${userTurnCount}번째 참가자`;
+        if (userTurnCount + 1 > saveUserNum) userTurnCount = 0;
+      };
+
+      let word = "";
+      const getWord = (userInput) => {
+        if (!$userNum.textContent) return;
+        // 시작하기 전에 참가자 입력을 받았는가?
+        if (word == "") {
+          // 처음 시작
+          $word.textContent = userInput;
+          word = userInput;
+          return;
+        }
+        // 두번째 턴부터
+        let newWord = userInput;
+        if (word[word.length - 1] == newWord[0] && newWord.length == 3) {
+          // 정답
+          word = newWord;
+          $word.textContent = word;
+        } else {
+          // 오답
+          alert(`${userTurnCount}번째 참가자의 패배`);
+          return true;
+        }
+      }; // 제로초 JS 4-4 if문 줄이기 대성공!!
+
+      const onclickButton = (event) => {
+        event.preventDefault();
+        const userInput = event.target[0].value;
+
+        if (getWord(userInput)) return;
+        if (checkUserNum(userInput)) return;
+        checkUserturn(saveUserNum);
+
+        event.target[0].value = "";
+      };
+
+      $form.addEventListener("submit", onclickButton);
+
+      document.body.append($word);
+      document.body.append($form);
+    </script>
+  </body>
+</html>

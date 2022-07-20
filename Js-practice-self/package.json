@@ -1,0 +1,19 @@
+{
+  "name": "practice_every",
+  "version": "1.0.0",
+  "description": "for_repeat_studyJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/godhyeongman/JS-practic-with-NO-answer.git"
+  },
+  "author": "dott",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/godhyeongman/JS-practic-with-NO-answer/issues"
+  },
+  "homepage": "https://github.com/godhyeongman/JS-practic-with-NO-answer#readme"
+}
