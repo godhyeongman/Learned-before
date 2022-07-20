@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2048게임</title>
+    <style>
+      #table {
+        border-collapse: collapse;
+        user-select: none;
+      }
+      #table td {
+        border: 10px solid #bbada0;
+        width: 116px;
+        height: 128px;
+        font-size: 50px;
+        font-weight: bold;
+        text-align: center;
+      }
+      #score {
+        user-select: none;
+      }
+      .color-2 {
+        background-color: #eee4da;
+        color: #776e65;
+      }
+      .color-4 {
+        background-color: #eee1c9;
+        color: #776e65;
+      }
+      .color-8 {
+        background-color: #f3b27a;
+        color: "white";
+      }
+      .color-16 {
+        background-color: #f69664;
+        color: "white";
+      }
+      .color-32 {
+        background-color: #f77c5f;
+        color: "white";
+      }
+      .color-64 {
+        background-color: #f75f3b;
+        color: "white";
+      }
+      .color-128 {
+        background-color: #edd073;
+        color: #776e65;
+      }
+      .color-256 {
+        background-color: #edcc62;
+        color: #776e65;
+      }
+      .color-512 {
+        background-color: #edc950;
+        color: #776e65;
+      }
+      .color-1024 {
+        background-color: #edc53f;
+        color: #776e65;
+      }
+      .color-2048 {
+        background-color: #edc22e;
+        color: #776e65;
+      }
+    </style>
+  </head>
+  <body>
+    <table id="table"></table>
+    <div class="score">0</div>
+    <script>
+      const $table = document.getElementById("table"); //제로초 80번째 유사배열 공부해야함
+      const $score = document.getElementById("score");
+      let data = [];
+
+      function startGame() {
+        // 칸생성 데이터에 2차원배열 삽입
+        const $fragment = document.createDocumentFragment();
+        [1, 2, 3, 4].forEach(function () {
+          const rowData = [];
+          data.push(rowData); //로우데이터를 우선 넣어주고 그후에 값을 넣어주는 방식
+          const $tr = document.createElement("tr");
+          [1, 2, 3, 4].forEach(() => {
+            rowData.push(0);
+            const $td = document.createElement("td");
+            $tr.append($td);
+          });
+          $fragment.append($tr);
+        });
+        $table.append($fragment);
+        put2ToRandomCell();
+        draw();
+      }
+      // tabe -> fragment -> tr -> td
+      function put2ToRandomCell() {
+        // 빈칸찾아 2삽입
+        const emptyCells = [];
+        data.forEach((rowData, idx) => {
+          rowData.forEach((El, El_idx) => {
+            if (!El) {
+              emptyCells.push([idx, El_idx]);
+            }
+          });
+        });
+        const randomCell =
+          emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        data[randomCell[0]][randomCell[1]] = 2;
+      }
+
+      function draw() {
+        // data를 확인하여 값이 있는경우 $table태그안에 해당 객체의 클래스 할당하고 텍스트 를 넣어줌
+        data.forEach((rowData, i) => {
+          rowData.forEach((cellData, j) => {
+            const $target = $table.children[i].children[j];
+            if (cellData > 0) {
+              $target.textContent = cellData;
+              $target.className = "color-" + cellData;
+            } else {
+              $target.textContent = "";
+              $target.className = "";
+            }
+          });
+        });
+      }
+
+      function moveCells(direction) {
+        switch (direction) {
+          case "left": {
+            const newData = [[], [], [], []];
+            data.forEach((rowData, i) => {
+              rowData.forEach((cellData, j) => {
+                if (cellData) {
+                  const currentRow = newData[i];
+                  const prevData = currentRow[currentRow.length - 1];
+                  if (prevData === cellData) {
+                    // 이전과 값과 지금 값이 같으면
+                    currentRow[currentRow.length - 1] *= -2;
+                  } else {
+                    newData[i].push(cellData);
+                  }
+                }
+              });
+            });
+            [1, 2, 3, 4].forEach((rowData, i) => {
+              [1, 2, 3, 4].forEach((cellData, j) => [
+                (data[i][j] = Math.abs(newData[i][j]) || 0),
+              ]);
+            });
+            break;
+          }
+
+          case "right": {
+            const newData = [[], [], [], []];
+            data.forEach((rowData, i) => {
+              rowData.forEach((cellData, j) => {
+                if (rowData[3 - j]) {
+                  const currentRow = newData[i];
+                  const prevData = currentRow[currentRow.length - 1];
+                  if (prevData === rowData[3 - j]) {
+                    // 이전과 값과 지금 값이 같으면
+                    currentRow[currentRow.length - 1] *= -2;
+                  } else {
+                    newData[i].push(rowData[3 - j]);
+                  }
+                }
+              });
+            });
+            [1, 2, 3, 4].forEach((rowData, i) => {
+              [1, 2, 3, 4].forEach((cellData, j) => [
+                (data[i][3 - j] = Math.abs(newData[i][j]) || 0),
+              ]);
+            });
+            break;
+          }
+
+          case "up": {
+            const newData = [[], [], [], []];
+            data.forEach((rowData, i) => {
+              rowData.forEach((cellData, j) => {
+                if (cellData) {
+                  const currentRow = newData[j];
+                  const prevData = currentRow[currentRow.length - 1];
+                  if (prevData === cellData) {
+                    currentRow[currentRow.length - 1] *= -2;
+                  } else {
+                    newData[j].push(cellData);
+                  }
+                }
+              });
+            });
+            [1, 2, 3, 4].forEach((cellData, i) => {
+              [1, 2, 3, 4].forEach((rowData, j) => {
+                data[j][i] = Math.abs(newData[i][j]) || 0;
+              });
+            });
+            break;
+          }
+
+          case "down": {
+            const newData = [[], [], [], []];
+            data.forEach((rowData, i) => {
+              rowData.forEach((cellData, j) => {
+                if (data[3 - i][j]) {
+                  const currentRow = newData[j];
+                  const prevData = currentRow[currentRow.length - 1];
+                  if (prevData === data[3 - 1][j]) {
+                    currentRow[currentRow.length - 1] *= -2;
+                  } else {
+                    newData[j].push(data[3 - i][j]);
+                  }
+                }
+              });
+            });
+            [1, 2, 3, 4].forEach((cellData, i) => {
+              [1, 2, 3, 4].forEach((rowData, j) => {
+                data[3 - j][i] = Math.abs(newData[i][j]) || 0;
+              });
+            });
+            break;
+          }
+        }
+        put2ToRandomCell();
+        draw();
+      }
+      // 키보드 화살표 입력값 확인하고 moveCells함수를 실행
+      // 이때 인수로 입력받은 방향을 대입해줌
+      window.addEventListener("keyup", (event) => {
+        if (event.key === "ArrowUp") {
+          moveCells("up");
+        } else if (event.key === "ArrowDown") {
+          moveCells("down");
+        } else if (event.key === "ArrowLeft") {
+          moveCells("left");
+        } else if (event.key === "ArrowRight") {
+          moveCells("right");
+        }
+      });
+
+      let startCoord;
+      window.addEventListener("mousedown", (event) => {
+        // 마우스 클릭한 위치 좌표를 startCoord에 저장
+        startCoord = [event.clientX, event.clientY];
+      });
+      window.addEventListener("mouseUP", (event) => {
+        const endCoord = [event.clientX, event.clientY];
+        const diffX = endCoord[0] - startCoord[0];
+        const diffY = endCoord[1] - startCoord[1];
+        if (diffX < 0 && Math.abs(diffX) > Math.abs(diffY)) {
+          //책의 설명참조
+          moveCells("left");
+        }
+        if (diffX > 0 && Math.abs(diffX) > Math.abs(diffY)) {
+          moveCells("right");
+        }
+        if (diffY > 0 && Math.abs(diffX) <= Math.abs(diffY)) {
+          moveCells("down");
+        }
+        if (diffY < 0 && Math.abs(diffX) <= Math.abs(diffY)) {
+          moveCells("up");
+        }
+      });
+
+      startGame();
+    </script>
+  </body>
+</html>

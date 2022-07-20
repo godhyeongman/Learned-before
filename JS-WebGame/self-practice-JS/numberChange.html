@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>프로그래머스 숫자바꾸기 게임</title>
+  </head>
+  <body>
+    <div id="result"></div>
+    <script>
+      const $result = document.querySelector("#result");
+      let s = "one4seveneight";
+
+      function solution(s) {
+        let numbers = [
+          "zero",
+          "one",
+          "two",
+          "three",
+          "four",
+          "five",
+          "six",
+          "seven",
+          "eight",
+          "nine",
+        ];
+        let answer = s;
+
+        for (let i = 0; i < numbers.length; i++) {
+          let arr = answer.split(numbers[i]);
+          answer = arr.join(i); // 이부분이 이해가 잘안감
+        }
+
+        return Number(answer);
+      }
+      console.log(solution(s));
+    </script>
+  </body>
+</html>

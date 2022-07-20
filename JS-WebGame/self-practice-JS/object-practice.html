@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>객체 연습</title>
+  </head>
+  <body>
+    <script>
+      //object assign practice
+      let a = { first: 2, second: "apple", third: true };
+      let clone = {};
+      for (let key in a) {
+        clone[key] = a[key];
+      }
+      alert(clone.first);
+
+      let a = { first: 2, second: "apple", third: true };
+      let b = { forth: "sucess" };
+      Object.assign(a, { first: "첫번째" });
+      alert(a);
+      Object.assign(a, b);
+      alert(b);
+    </script>
+  </body>
+</html>

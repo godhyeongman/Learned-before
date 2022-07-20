@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 로또 셀프체크</title>
+    <style>
+      .ball {
+        display: inline-block;
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+        border: 1px solid black;
+        border-radius: 10px;
+        font-size: 15px;
+        text-align: center;
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="result">로또 번호:</div>
+    <div id="bonus">보너스:</div>
+    <script>
+      const $result = document.querySelector("#result");
+      const $bonus = document.querySelector("#bonus");
+
+      const numScope = Array(45)
+        .fill()
+        .map((el, idx) => (el = idx + 1));
+      const shuffle = [];
+      for (let i = numScope.length; i > 0; i--) {
+        randomNum = Math.floor(Math.random() * i);
+        let shufflePush = numScope.splice(randomNum, 1);
+        shuffle.push(shufflePush[0]);
+      }
+
+      const answer = shuffle.slice(0, 6);
+      answer.sort((a, b) => a - b);
+      const bonusNum = shuffle.slice(6, 7);
+
+      showBall = (number, _target) =>
+        setTimeout(() => {
+          $ball = document.createElement("div");
+          $ball.className = "ball";
+          $ball.textContent = answer[number];
+          checkColor($ball.textContent, $ball);
+          _target.append($ball);
+        }, 1000 * (number + 1));
+
+      for (let i = 0; i < answer.length - 1; i++) {
+        showBall(i, $result);
+      }
+
+      setTimeout(() => {
+        $ball = document.createElement("div");
+        $ball.className = "ball";
+        $ball.textContent = bonusNum;
+        checkColor($ball.textContent, $ball);
+        $bonus.append($ball);
+      }, 1000 * answer.length);
+
+      function checkColor(check, tagplus) {
+        if (check > 0 && 10 >= check) {
+          tagplus.style.backgroundColor = "tomato";
+        } else if (check > 10 && 20 >= check) {
+          tagplus.style.backgroundColor = "purple";
+        } else if (check > 20 && 30 >= check) {
+          tagplus.style.backgroundColor = "green";
+        } else if (check > 30 && 40 >= check) {
+          tagplus.style.backgroundColor = "blue";
+        } else {
+          tagplus.style.backgroundColor = "yellow";
+        }
+      }
+    </script>
+  </body>
+</html>

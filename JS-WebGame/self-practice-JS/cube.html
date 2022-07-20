@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>큐브만들기</title>
+    <style>
+      cell {
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        border-radius: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const $cube = document.createElement("cube");
+
+      const cubeData = [];
+      for (let i = 0; i < 3; i++) {
+        const $cellsRow = document.createElement("cellsRow");
+        const cubeDataRow = [];
+        for (let j = 0; j < 3; j++) {
+          const $cell = document.createElement("cell"); // 큐브셀들이 생성되지 않음
+          cubeDataRow.push($cell);
+          $cellsRow.append($cell);
+        }
+        cubeData.push(cubeDataRow);
+        $cube.append($cellsRow);
+      }
+
+      document.body.append($cube);
+      document.body.append($form);
+    </script>
+  </body>
+</html>

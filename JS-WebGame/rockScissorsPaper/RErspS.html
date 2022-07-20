@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 가위바위보 셀프체크</title>
+    <style>
+      #computer {
+        width: 142px;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="computer"></div>
+    <div>
+      <<<<<<< HEAD
+      <button id="rock" class="btn">바위</button>
+      <button id="scissors" class="btn">가위</button>
+      =======
+      <button id="scissors" class="btn">가위</button>
+      <button id="rock" class="btn">바위</button>
+      >>>>>>> 22ff8269375d0f5e68817c65de338927f5b6a446
+      <button id="paper" class="btn">보</button>
+    </div>
+    <div id="score"></div>
+
+    <script>
+      const $computer = document.querySelector("#computer");
+      const $rock = document.querySelector("#rock");
+      const $scissors = document.querySelector("#scissors");
+      const $paper = document.querySelector("#paper");
+      const $score = document.querySelector("#score");
+
+      const IMG_URL = "./rsp.png";
+      $computer.style.background = `url(${IMG_URL}) 0 0`;
+      $computer.style.backgroundSize = "auto 200px";
+
+      rspCoordinate = {
+        rock: "-230px",
+        scissors: "0px",
+        paper: "-445px",
+      };
+
+      rspScoreTable = {
+        rock: 1,
+        scissors: 0,
+        paper: -1,
+      };
+
+      let computerChoice = rspCoordinate.rock;
+      chageRSP = () => {
+        if (computerChoice == rspCoordinate.rock) {
+          computerChoice = rspCoordinate.scissors;
+        } else if (computerChoice == rspCoordinate.scissors) {
+          computerChoice = rspCoordinate.paper;
+        } else if (computerChoice == rspCoordinate.paper) {
+          computerChoice = rspCoordinate.rock;
+        }
+        $computer.style.background = `url(${IMG_URL}) ${computerChoice} 0`;
+        $computer.style.backgroundSize = "auto 200px";
+      };
+
+      let intervalId = setInterval(chageRSP, 100);
+
+      let clickable = true;
+      let winOrLoseScore = 0;
+      onClickEvent = () => {
+        if (winOrLoseScore >= 3) {
+          alert("승리 했습니다");
+          return;
+        } else if (winOrLoseScore <= -3) {
+          alert("패배 했습니다.");
+          return;
+        }
+
+        if (clickable) {
+          clearInterval(intervalId);
+          clickable = false;
+          setTimeout(() => {
+            clickable = true;
+            intervalId = setInterval(chageRSP, 100);
+          }, 1000);
+
+          userHand = event.target.id;
+          computerHand =
+            computerChoice === rspCoordinate.rock
+              ? "rock"
+              : computerChoice === rspCoordinate.scissors
+              ? "scissors"
+              : "paper";
+
+          winOrLose = rspScoreTable[userHand] - rspScoreTable[computerHand];
+          if ([2, -1].includes(winOrLose)) {
+            $score.textContent = `패배! ${--winOrLoseScore}`;
+          } else if ([-2, 1].includes(winOrLose)) {
+            $score.textContent = `승리! ${++winOrLoseScore}`;
+          } else if (winOrLose == 0) {
+            $score.textContent = `무승부 ${winOrLose}`;
+          }
+        }
+      };
+      // 에러에러 멈추는 시점이 이상한 clickable 부분 수정필요함
+
+      let userHand = "";
+      let computerHand = "";
+      let winOrLose = "";
+
+      $rock.addEventListener("click", onClickEvent);
+      $scissors.addEventListener("click", onClickEvent);
+      $paper.addEventListener("click", onClickEvent);
+    </script>
+  </body>
+</html>

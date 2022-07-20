@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>텍스트 rpg</title>
+  </head>
+  <body>
+    <form id="start-screen">
+      <input id="name-input" placeholder="주인공 이름을 입력하세요" />
+      <button id="start">시작</button>
+    </form>
+    <div id="screen">
+      <div id="hero-stat">
+        <span id="hero-name"></span>
+        <span id="hero-level"></span>
+        <span id="hero-hp"></span>
+        <span id="hero-xp"></span>
+        <span id="hero-att"></span>
+      </div>
+      <form id="game-menu" style="display: none">
+        <div id="menu-1">1.모험</div>
+        <div id="menu-2">2.휴식</div>
+        <div id="menu-3">3.종류</div>
+        <input type="text" id="menu-input" />
+        <button id="menu-button">입력</button>
+      </form>
+      <form id="battle-menu" style="display: none">
+        <div id="battle-1">1.공격</div>
+        <div id="battel-2">2.휴식</div>
+        <div id="battle-3">3.도망</div>
+        <input id="battle-input" />
+        <button id="battle-button">입력</button>
+      </form>
+    </div>
+    <div id="message"></div>
+    <div id="monster-stat">
+      <span id="monster-name"></span>
+      <span id="monster-hp"></span>
+      <span id="monster-att"></span>
+    </div>
+    <script>
+      const $startScreen = document.querySelector("#start-screen");
+      const $gameMenu = document.querySelector("#game-menu");
+      const $battleMenu = document.querySelector("#battle-menu");
+      const $heroName = document.querySelector("#hero-name");
+      const $heroLevel = document.querySelector("#hero-level");
+      const $heroHp = document.querySelector("#hero-hp");
+      const $heroXp = document.querySelector("#hero-xp");
+      const $heroAtt = document.querySelector("#hero-att");
+      const $message = document.querySelector("#message");
+      const $monsterName = document.querySelector("#monster-name");
+      const $monsterHp = document.querySelector("#monster-hp");
+      const $monsterAtt = document.querySelector("#monster-att");
+
+      const hero = {
+        name: "",
+        lev: 1,
+        maxHp: 100,
+        hp: 100,
+        xp: 0,
+        att: 10,
+        attack(monster) {
+          monster.hp -= this.att;
+          this.hp -= monster.att;
+        },
+        heal(monster) {
+          this.hp += this.hp / 10;
+          this.hp -= monster.att / 3;
+        },
+      };
+
+      let monster = null;
+      const monsterList = [
+        { name: "슬라임", hp: 25, att: 10, xp: 10 },
+        { name: "스켈레톤", hp: 50, att: 15, xp: 20 },
+        { name: "마왕", hp: 150, att: 35, xp: 50 },
+      ];
+      $startScreen.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = event.target["name-input"].value;
+        $startScreen.style.display = "none";
+        $gameMenu.style.display = "block";
+        $heroName.textContent = name;
+        $heroLevel.textContent = `${hero.lev}레벨`;
+        $heroHp.textContent = `${hero.hp}/${hero.maxHp}:체력/최대체력`;
+        $heroXp.textContent = `${hero.xp}/${15 * hero.lev}:달성시 레벨업`;
+        $heroAtt.textContent = `공력력: ${hero.att}`;
+      });
+
+      $gameMenu.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = event.target["menu-input"].value;
+        if (input === "1") {
+          $gameMenu.style.display = "none";
+          $battleMenu.style.display = "block";
+          monster = JSON.parse(
+            JSON.stringify(
+              monsterList[Math.floor(Math.random() * monsterList.length)]
+            )
+          );
+          monster.maxHp = monster.hp;
+          $monsterName.textContent = monster.name;
+          $monsterHp.textContent = `HP: ${monster.hp}/${monster.maxHp}`;
+          $monsterAtt.textContent = `ATT: ${monster.att}`;
+        } else if (input === "2") {
+          // 휴식
+        } else if (input === "3") {
+          // 종류
+        }
+      });
+
+      $battleMenu.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = event.target["battle-input"].value;
+        if (input === "1") {
+          //공격
+          hero.attack(monster);
+          monster.attack(hero);
+          $heroHp.textContent = `Hp: ${hero.hp}/${hero.maxHp}`;
+          $monsterHp = `HP: ${monster.hp}/${monster.maxHp}`;
+          $message.textContent = `${hero.att}의 데미지를 주고, ${monster.att}의 데미지를 받았다.`;
+        } else if (input === "2") {
+          //회복
+        } else if (input === "3") {
+          //도망
+        }
+      });
+
+      //   1.주인공 이름을 입력받아 만들기
+      //   (인풋과 버튼을 이용하여 submit 이떄 preventDefault메서드 활용)
+
+      //   2.주인공의 체력 공력력 경험치를 만들어서 저장
+      //   (객체를 이용하여 주인공 변수에 저장)
+
+      //   3. 3개의 선택지 모험 휴식 종류
+      //   (3개의 버튼 모험 고를시 전투 휴식 종류는 차후에 결정)
+      //   (휴식을 고를경우 체력을 50%회복 휴식을 할때마다 휴식카운트 +1
+      //   휴식 카운트가 3번 이될경우 휴식버튼 삭제)
+      //   (종료 버튼을 고를경우 )
+
+      //   4. 전투시 적을 랜덤하게 생성하여 전투 선택지는 3개 공격 체력회복 도망
+
+      //   5. 공격을 선택시 주인공 객체 공경력 값 만큼 적 객체 체력값을 감소
+
+      //   6. 1초후 적의 턴 적은 공격 혹은 체력회복 선택이 랜덤하게 가능
+      //     (Math.random 메서드를 활용 0,1 중 하나의 값이 나옴 0일경우 공격 1일경우 회복)
+
+      //   7. 이길경우 적의 객체 경험치 값만큼 주이공 경험치값 상승
+
+      //   8. 질경우 주인공 처음 화면으로 돌아감
+
+      //   9. 종료 버튼은 초기화면으로 돌아감
+    </script>
+  </body>
+</html>

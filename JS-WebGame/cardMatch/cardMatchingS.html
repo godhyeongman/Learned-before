@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>카드매칭 게임 셀프체크</title>
+    <style>
+      #wrapper {
+        width: 380px;
+      }
+      .card {
+        display: inline-block;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        width: 70px;
+        height: 100px;
+        perspective: 140px;
+      }
+
+      .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+      }
+
+      .card.flipped .card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .card-front {
+        background: navy;
+      }
+
+      .card-front,
+      .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+        backface-visibility: hidden;
+      }
+
+      .card-back {
+        transform: rotateY(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper"></div>
+
+    <script>
+      const $wrapper = document.querySelector("#wrapper");
+      let total = +prompt(
+        "카트 숫자를 짝수로 입력해주십쇼",
+        "please input number here"
+      );
+      const colors = [
+        "tomato",
+        "turquoise",
+        "aqua",
+        "grey",
+        "lime",
+        "pink",
+        "beige",
+        "skyblue",
+        "purple",
+        "black",
+      ];
+      let shuffle = [];
+      let startTime;
+      let clicked = [];
+      let matched = [];
+      let clickable = true;
+      let colorSlice = colors.slice(0, total / 2);
+      let colorsCopy = colorSlice.concat(colorSlice);
+      function shuffleColor() {
+        const randomIndex = Math.floor(Math.random() * colorsCopy.length);
+        const splicedColor = colorsCopy.splice(randomIndex, 1);
+        shuffle.push(splicedColor[0]);
+      }
+      function makeCard(i) {
+        const card = document.createElement("div");
+        card.className = "card";
+        const cardInner = document.createElement("div");
+        cardInner.className = "card-inner";
+        const cardFront = document.createElement("div");
+        cardFront.className = "card-front";
+        const cardBack = document.createElement("div");
+        cardBack.className = "card-back";
+        cardBack.style.backgroundColor = shuffle[i];
+        cardInner.append(cardFront, cardBack);
+        card.append(cardInner);
+        card.addEventListener("click", onclickCard);
+        $wrapper.append(card);
+      }
+
+      function onclickCard(event) {
+        if (!clickable || clicked.includes(this) || matched.includes(this))
+          return;
+
+        this.classList.toggle("flipped");
+        clicked.push(this);
+
+        if (clicked.length !== 2) {
+          return;
+        }
+
+        clickable = false;
+
+        const firstColor =
+          clicked[0].querySelector(".card-back").style.backgroundColor;
+        const secondColor =
+          clicked[1].querySelector(".card-back").style.backgroundColor;
+        if (firstColor === secondColor) {
+          clickable = true;
+          matched = matched.concat(clicked);
+          clicked = [];
+          if (matched.length === total) {
+            setTimeout(() => {
+              const endTime = new Date();
+              alert(`clear! 걸린시간: ${(endTime - startTime) / 1000}초`);
+              resetGame();
+            }, 1000);
+            return;
+          }
+          return;
+        }
+
+        setTimeout(() => {
+          clicked[0].classList.toggle("flipped");
+          clicked[1].classList.toggle("flipped");
+          clicked = [];
+          clickable = true;
+        }, 800);
+      }
+
+      function resetGame() {
+        $wrapper.innerHTML = "";
+        matched = [];
+        total = +prompt(
+          "카트 숫자를 짝수로 입력해주십쇼",
+          "please input number here"
+        );
+        colorsCopy = colorSlice.concat(colorSlice);
+        startGame();
+      }
+
+      function startGame() {
+        clickable = false;
+        for (let i = 0; i < total; i++) {
+          shuffleColor();
+          makeCard(i);
+        }
+
+        document.querySelectorAll(".card").forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add("flipped");
+          }, 1000 + 100 * index);
+        });
+
+        document.querySelectorAll(".card").forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.remove("flipped");
+            clickable = true;
+          }, 5500);
+        });
+        startTime = new Date();
+      }
+      startGame();
+    </script>
+  </body>
+</html>

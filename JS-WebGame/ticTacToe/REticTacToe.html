@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 틱택토</title>
+    <style>
+      td {
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        border-radius: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const $table = document.createElement("table");
+      const $result = document.createElement("div");
+
+      const rows = [];
+      let turn = "O";
+
+      const checkWinner = (Cell) => {
+        let rowsIndex; //몇번째 줄인지 확인하기위한 변수
+        let cellsIndex; //몇번째 칸인지 확인하기위한 변수
+        rows.forEach((rowsEl, rowsIdx) => {
+          // 줄 비교
+          rowsEl.forEach((rowsEl_el, rowsEl_elIdx) => {
+            //칸 비교
+            if (rowsEl_el === Cell) {
+              //클릭 이벤트 발생한 칸 발견
+              rowsIndex = rowsIdx; //이벤트 발생줄을 변수 저장
+              cellsIndex = rowsEl_elIdx; // 이벤트 발생 칸을 변수 저장
+            }
+          });
+        });
+
+        // 세칸이 다 채워지면 true로 전환
+        let hasWinner = false;
+        // 가로줄검사
+        if (
+          rows[rowsIndex][0].textContent === turn &&
+          rows[rowsIndex][1].textContent === turn &&
+          rows[rowsIndex][2].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        // 세로줄 검사
+        if (
+          rows[0][cellsIndex].textContent === turn &&
+          rows[1][cellsIndex].textContent === turn &&
+          rows[2][cellsIndex].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        // 대각선 검사 2개
+        if (
+          rows[0][0].textContent === turn &&
+          rows[1][1].textContent === turn &&
+          rows[2][2].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+
+        if (
+          rows[0][2].textContent === turn &&
+          rows[1][1].textContent === turn &&
+          rows[2][0].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        return hasWinner;
+      };
+
+      function checkTurn(event) {
+        if (event.target.textContent) {
+          // 이미 칸에 O,X가 있을경우
+          return;
+        }
+
+        event.target.textContent = turn;
+
+        if (checkWinner(event.target /*무승부처리*/)) {
+          $result.textContent = `${turn} 님이 승리!`;
+          $table.removeEventListener("click", onClickEvent);
+          return;
+        }
+        // 무승부 처리
+        let count = 9;
+        rows.forEach((rowsEl, rowsidx) => {
+          rowsEl.forEach((rowsEl_el, rowsEl_idx) => {
+            if (rowsEl_el.textContent) {
+              count--;
+            }
+          });
+        });
+        if (count === 0) {
+          $result.textContent = "무승부입니다.";
+          return;
+        }
+        if (turn === "O") {
+          turn = "X";
+        } else if (turn === "X") {
+          turn = "O";
+        }
+      }
+
+      function onClickEvent(clickedCell) {
+        checkTurn(clickedCell);
+      }
+
+      for (let i = 0; i < 3; i++) {
+        const $tr = document.createElement("tr");
+        const cells = [];
+        for (let j = 0; j < 3; j++) {
+          const $td = document.createElement("td");
+          cells.push($td);
+          $tr.append($td);
+        }
+        rows.push(cells);
+        $table.append($tr);
+        $table.addEventListener("click", onClickEvent);
+      }
+
+      document.body.append($table);
+      document.body.append($result);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다시하는 숫자야구t</title>
+  </head>
+  <body>
+    <form id="form">
+      <input type="text" id="userNum" />
+      <button id="btn">확인</button>
+    </form>
+    <div id="result"></div>
+    <script>
+      const $form = document.querySelector("#form");
+      const $userNum = document.querySelector("#userNum");
+      const $btn = document.querySelector("#btn");
+      const $result = document.querySelector("#result");
+
+      // 소수점 처리 원할때 math.floor()은 내림 math.round()는 반올림 math.seal()은 반올림
+
+      const numList = [];
+      const answer = [];
+
+      for (let i = 0; i < 9; i++) {
+        numList.push(i + 1);
+      } // 야구공 범위
+
+      for (let i = 0; i < 4; i++) {
+        let rndNum = Math.floor(Math.random() * (numList.length - i));
+        answer.push(numList[rndNum]);
+        numList.splice(rndNum, 1);
+      } // 정답 배열안에 랜덤한 숫자 삽입
+
+      let tries = []; // 중복된 값을 받지않게 시도한값을 저장하기 위한 배열
+
+      function checkUserNum(input) {
+        if (input.length !== 4) {
+          return alert("4자리수가 아닙니다 다시입력해주세요");
+        }
+        if (new Set(input).size !== 4) {
+          //   new Set은 ()매겨변수에 중복을 재거함
+          //   ex) [3144] --> new set([3144]) = 314
+          //   원래 배열길이를 사용하고 싶으면 .length를
+          //   사용해야하지만 new set이면 .size를 사용함
+          return alert("숫자가 중복되지 않게 입력해주세요");
+        }
+        if (tries.includes(input)) {
+          return alert("이미 시도한 숫자입니다.");
+        }
+        tries.push(input); //tries에 문제없는 4자리수를 저장해놓음 *추후 중복방지
+        return true;
+      } //검사하는코드
+
+      onClickEvent = (event) => {
+        event.preventDefault();
+
+        const value = event.target[0].value; //event = form, target[0] = input target[1]=button
+        event.target[0] = "";
+        if (!checkUserNum(value)) {
+          //입력값 문제없음 stirke,ball 카운트시작
+          return;
+        }
+        if (answer.join("") === value) {
+          // join()은 배열사이에 매개변수를 넣어줌
+          // ex) [3,1,4,6].join() --> '3,1,4,6' **이떄 기본join()값은 join(',') 임을 유의
+          // ex2) [3,1,4,6].join(':') -->'3:1:4:6'
+          // ex3) [3,1,4,6].join('') --> '3146' **빈문자열이기떄문에 사이 ,삭제 결과적으로 문자열이됨
+          $result.textContent = "홈런!";
+          return;
+        }
+        if (tries.length >= 9) {
+          const message = document.createTextNode(
+            `패배! 정답은:${answer.join("")}이였습니다.`
+          ); //.createTextNode는 텍스트를 추가함 *정확한 정보는 검색혹은 제로초 5-5 9분
+          $result.appendChild(message); // append는 .앞에추가 appendChild는 자식으로 추가
+          return;
+        }
+
+        let ballcount = 0;
+        let strikecount = 0; //ball strike tries 새기위한 변수들
+
+        for (let i = 0; i < answer.length; i++) {
+          const index = value.indexOf(answer[i]);
+          //))))이부분이 이해가 잘안됨 내일 공부하고 주석지울것
+          if (index > -1) {
+            if (index === i) {
+              strikecount++;
+            } else {
+              ballcount++;
+            }
+          }
+        }
+        $result.append(
+          `${value}: ${strikecount}스트라이크 ${ballcount}볼`,
+          document.createElement("br")
+        );
+      };
+
+      $form.addEventListener("submit", onClickEvent);
+    </script>
+  </body>
+</html>
